@@ -13,7 +13,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest 
 
     steps:
     - uses: actions/checkout@v4
@@ -22,8 +22,8 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore ./MusicMarketApp/MusicMarketApp.sln
+      run: dotnet restore ./UniversityData/UniversityData.sln
     - name: Build
-      run: dotnet build --no-restore ./MusicMarketApp/MusicMarketApp.sln
+      run: dotnet build --no-restore ./UniversityData/UniversityData.sln
     - name: Test
-      run: dotnet test --no-build --verbosity normal ./MusicMarketApp/MusicMarketApp.sln
+      run: dotnet test --no-build --verbosity normal ./UniversityData/UniversityData.sln
