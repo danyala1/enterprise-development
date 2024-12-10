@@ -35,13 +35,13 @@ public class University
     /// <summary>
     /// Факультеты университета
     /// </summary>
-    public List<Faculty> FacultiesData { get; set; } = new List<Faculty>();
+    public List<Faculty> FacultiesData { get; set; } = [];
     /// <summary>
     /// Кафедры университета
     /// </summary>
-    public List<Department> DepartmentsData { get; set; } = new List<Department>();
+    public List<Department> DepartmentsData { get; set; } = [];
     /// <summary>
     /// Таблица связи специальность-количество групп
     /// </summary>
-    public List<SpecialtyTableNode> SpecialtyTable { get; set; } = new List<SpecialtyTableNode>();
+    public List<SpecialtyTableNode> SpecialtyTable { get; set; } = [];
 }
