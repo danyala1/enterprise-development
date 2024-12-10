@@ -11,11 +11,11 @@ public class Department
     /// <summary>
     /// Название кафедры
     /// </summary>
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
     /// <summary>
     /// Контактный телефон заведущего кафедрой
     /// </summary>
-    public string SupervisorNumber { get; set; } = string.Empty;
+    public required string SupervisorNumber { get; set; }
     /// <summary>
     /// Ссылка на обратную связь
     /// </summary>

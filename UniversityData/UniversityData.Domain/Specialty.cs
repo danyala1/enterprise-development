@@ -11,11 +11,11 @@ public class Specialty
     /// <summary>
     /// Название специальности
     /// </summary>
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
     /// <summary>
     /// Код-шифр специальности 
     /// </summary>
-    public string Code { get; set; } = string.Empty;
+    public required string Code { get; set; }
     /// <summary>
     /// Ссылка на обратную связь
     /// </summary>
