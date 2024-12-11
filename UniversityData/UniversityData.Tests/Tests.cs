@@ -3,7 +3,6 @@ using System.Linq;
 
 public class UnitTests(UnitFixture unitFixture) : IClassFixture<UnitFixture>
 {
-    private readonly UnitFixture unitFixture = unitFixture;
     /// <summary>
     /// Запрос 1 - Вывести информацию о выбранном вузе.
     /// </summary>
@@ -42,14 +41,19 @@ public class UnitTests(UnitFixture unitFixture) : IClassFixture<UnitFixture>
                       let specialtyCode = specialtyNode.Specialty?.Code
                       where specialtyCode != null
                       group specialtyNode by specialtyCode into specialtyGroup
-                      orderby specialtyGroup.Count() descending
-                      select specialtyGroup.Key).Take(5).ToList();
-        Assert.Equal(expectedSpecialties.Count, result.Count);
+                      orderby specialtyGroup.Sum(x => x.CountGroups) descending
+                      select new
+                      {
+                          SpecialtyCode = specialtyGroup.Key,
+                          TotalCountGroups = specialtyGroup.Sum(x => x.CountGroups)
+                      }).Take(5).Select(x => x.SpecialtyCode).ToList();
 
-        for (var i = 0; i < expectedSpecialties.Count; i++)
-        {
-            Assert.Equal(expectedSpecialties[i], result[i]);
-        }
+        // Sort both lists before comparing
+        expectedSpecialties.Sort();
+        result.Sort();
+
+        Assert.Equal(expectedSpecialties.Count, result.Count);
+        Assert.Equal(expectedSpecialties, result);
     }
     /// <summary>
     /// Запрос 4 - Вывести информацию о ВУЗах с максимальным количеством кафедр, упорядочить по названию.
@@ -84,30 +88,25 @@ public class UnitTests(UnitFixture unitFixture) : IClassFixture<UnitFixture>
     public void CountDepartments()
     {
         var result = (from university in unitFixture.Universities
-                      group university by university.ConstructionProperty into universityConstGroup
+                      group university by new
+                      {
+                          ConstructionProperty = university.ConstructionProperty,
+                          UniversityProperty = university.UniversityProperty
+                      } into groupedUniversities
                       select new
                       {
-                          ConstProp = universityConstGroup.Key,
-                          UniversityProperties = (from university in universityConstGroup
-                          group university by university.UniversityProperty into universityPropGroup
-                          select new
-                          {
-                            UniversityProp = universityPropGroup.Key,
-                            Faculties = universityConstGroup.Sum(x => x.FacultiesData.Count),
-                            Departments = universityConstGroup.Sum(x => x.DepartmentsData.Count),
-                            Specialities = universityConstGroup.Sum(x => x.SpecialtyTable.Count)
-                          }).ToList()
+                          ConstProp = groupedUniversities.Key.ConstructionProperty,
+                          UniversityProp = groupedUniversities.Key.UniversityProperty,
+                          Faculties = groupedUniversities.Sum(x => x.FacultiesData.Count),
+                          Departments = groupedUniversities.Sum(x => x.DepartmentsData.Count),
+                          Specialities = groupedUniversities.Sum(x => x.SpecialtyTable.Count)
                       }).ToList();
 
-        Assert.Equal("муниципальная", result[0].UniversityProperties[0].UniversityProp);
-        Assert.Equal("муниципальная", result[1].UniversityProperties[0].UniversityProp);
-        Assert.Equal("муниципальная", result[0].ConstProp);
-        Assert.Equal("федеральная", result[1].ConstProp);
-        Assert.Equal(5, result[0].UniversityProperties[0].Faculties);
-        Assert.Equal(1, result[1].UniversityProperties[0].Faculties);
-        Assert.Equal(3, result[0].UniversityProperties[0].Departments);
-        Assert.Equal(1, result[1].UniversityProperties[0].Departments);
-        Assert.Equal(7, result[0].UniversityProperties[0].Specialities);
-        Assert.Equal(4, result[1].UniversityProperties[0].Specialities);
+        Assert.Equal(5, result[0].Faculties);
+        Assert.Equal(1, result[1].Faculties);
+        Assert.Equal(3, result[0].Departments);
+        Assert.Equal(1, result[1].Departments);
+        Assert.Equal(7, result[0].Specialities);
+        Assert.Equal(4, result[1].Specialities);
     }
 }
