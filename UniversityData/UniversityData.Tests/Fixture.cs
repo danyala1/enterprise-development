@@ -25,9 +25,33 @@ public class UnitFixture
 
     public List<Rector> Rectors =>
     [
-        new() { Name = "Владимир", Surname = "Богатырев", Patronymic = "Дмитриевич", Degree = "Доктор экономических наук", Title = "Профессор", Position = "Ректор" },
-        new() { Name = "Дмитрий", Surname = "Быков", Patronymic = "Евгеньевич", Degree = "Доктор технических наук", Title = "Профессор", Position = "Ректор" },
-        new() { Name = "Вадим", Surname = "Ружников", Patronymic = "Александрович", Degree = "Кандидат технических наук", Title = "Доцент", Position = "Ректор" }
+        new()
+        {
+            Name = "Владимир",
+            Surname = "Богатырев",
+            Patronymic = "Дмитриевич", 
+            Degree = "Доктор экономических наук", 
+            Title = "Профессор", 
+            Position = "Ректор" 
+        },
+        new() 
+        { 
+            Name = "Дмитрий", 
+            Surname = "Быков", 
+            Patronymic = "Евгеньевич", 
+            Degree = "Доктор технических наук", 
+            Title = "Профессор", 
+            Position = "Ректор" 
+        },
+        new()
+        { 
+            Name = "Вадим", 
+            Surname = "Ружников", 
+            Patronymic = "Александрович", 
+            Degree = "Кандидат технических наук", 
+            Title = "Доцент", 
+            Position = "Ректор"
+        }
     ];
 
 
@@ -59,8 +83,41 @@ public class UnitFixture
 
     public List<University> Universities =>
     [
-        new() { Number = "12345", Name = "Самарский университет", Address = "Самара", RectorData = Rectors[0], UniversityProperty = "муниципальная", ConstructionProperty = "муниципальная", FacultiesData = Faculties.Take(3).ToList(), DepartmentsData = Departments.Take(2).ToList(), SpecialtyTable = SpecialtyTableNodes.Take(3).ToList() },
-        new() { Number = "56789", Name = "СамГТУ", Address = "Самара", RectorData = Rectors[1], UniversityProperty = "муниципальная", ConstructionProperty = "муниципальная", FacultiesData = Faculties.Skip(3).Take(2).ToList(), DepartmentsData = Departments.Skip(2).Take(1).ToList(), SpecialtyTable = SpecialtyTableNodes.Skip(3).Take(4).ToList() },
-        new() { Number = "45678", Name = "ПГУТИ", Address = "Самара", RectorData = Rectors[2], UniversityProperty = "муниципальная", ConstructionProperty = "федеральная", FacultiesData = Faculties.Skip(5).Take(1).ToList(), DepartmentsData = Departments.Skip(3).Take(1).ToList(), SpecialtyTable = SpecialtyTableNodes.Skip(7).Take(4).ToList() }
+        new()
+        { 
+            Number = "12345", 
+            Name = "Самарский университет", 
+            Address = "Самара", 
+            RectorData = Rectors[0], 
+            UniversityProperty = "муниципальная", 
+            ConstructionProperty = "муниципальная", 
+            FacultiesData = Faculties.Take(3).ToList(), 
+            DepartmentsData = Departments.Take(2).ToList(), 
+            SpecialtyTable = SpecialtyTableNodes.Take(3).ToList()
+        },
+        new() 
+        { 
+            Number = "56789", 
+            Name = "СамГТУ", 
+            Address = "Самара", 
+            RectorData = Rectors[1], 
+            UniversityProperty = "муниципальная", 
+            ConstructionProperty = "муниципальная", 
+            FacultiesData = Faculties.Skip(3).Take(2).ToList(),
+            DepartmentsData = Departments.Skip(2).Take(1).ToList(), 
+            SpecialtyTable = SpecialtyTableNodes.Skip(3).Take(4).ToList()
+        },
+        new() 
+        { 
+            Number = "45678", 
+            Name = "ПГУТИ", 
+            Address = "Самара", 
+            RectorData = Rectors[2], 
+            UniversityProperty = "муниципальная", 
+            ConstructionProperty = "федеральная", 
+            FacultiesData = Faculties.Skip(5).Take(1).ToList(), 
+            DepartmentsData = Departments.Skip(3).Take(1).ToList(), 
+            SpecialtyTable = SpecialtyTableNodes.Skip(7).Take(4).ToList()
+        }
     ];     
 }

@@ -35,7 +35,7 @@ public class UnitTests(UnitFixture unitFixture) : IClassFixture<UnitFixture>
     [Fact]
     public void TopFiveSpecialties()
     {
-        var expectedSpecialties = new List<string> { "10.05.03", "09.03.03", "09.03.02", "09.03.01", "01.03.02" };
+        var expectedSpecialties = new List<string> { "10.05.03", "09.03.03", "01.03.02", "09.03.01", "09.03.02" };
 
         var result = (from specialtyNode in unitFixture.SpecialtyTableNodes
                       let specialtyCode = specialtyNode.Specialty?.Code
@@ -48,10 +48,7 @@ public class UnitTests(UnitFixture unitFixture) : IClassFixture<UnitFixture>
                           TotalCountGroups = specialtyGroup.Sum(x => x.CountGroups)
                       }).Take(5).Select(x => x.SpecialtyCode).ToList();
 
-        // Sort both lists before comparing
-        expectedSpecialties.Sort();
-        result.Sort();
-
+        Assert.Equal(expectedSpecialties, result.Select(x => x));
         Assert.Equal(expectedSpecialties.Count, result.Count);
         Assert.Equal(expectedSpecialties, result);
     }
