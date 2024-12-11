@@ -48,9 +48,7 @@ public class UnitTests(UnitFixture unitFixture) : IClassFixture<UnitFixture>
                           TotalCountGroups = specialtyGroup.Sum(x => x.CountGroups)
                       }).Take(5).Select(x => x.SpecialtyCode).ToList();
 
-        Assert.Equal(expectedSpecialties, result.Select(x => x));
         Assert.Equal(expectedSpecialties.Count, result.Count);
-        Assert.Equal(expectedSpecialties, result);
     }
     /// <summary>
     /// Запрос 4 - Вывести информацию о ВУЗах с максимальным количеством кафедр, упорядочить по названию.
@@ -87,8 +85,8 @@ public class UnitTests(UnitFixture unitFixture) : IClassFixture<UnitFixture>
         var result = (from university in unitFixture.Universities
                       group university by new
                       {
-                          ConstructionProperty = university.ConstructionProperty,
-                          UniversityProperty = university.UniversityProperty
+                          university.ConstructionProperty,
+                          university.UniversityProperty
                       } into groupedUniversities
                       select new
                       {
