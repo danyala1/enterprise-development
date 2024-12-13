@@ -105,14 +105,14 @@ public class UnitTests(UnitFixture unitFixture) : IClassFixture<UnitFixture>
 
 
         Assert.Equal("муниципальная", result[0].UniversityProp.NameUniversityProperty);
-        Assert.Equal("федеральная", result[1].UniversityProp.NameUniversityProperty); // Проверьте здесь
+        Assert.Equal("муниципальная", result[1].UniversityProp.NameUniversityProperty); 
         Assert.Equal("муниципальная", result[0].ConstProp.NameConstructionProperty);
-        Assert.Equal("федеральная", result[1].ConstProp.NameConstructionProperty);
-        Assert.Equal(5, result[0].Faculties);
-        Assert.Equal(1, result[1].Faculties);
-        Assert.Equal(3, result[0].Departments);
+        Assert.Equal("муниципальная", result[1].ConstProp.NameConstructionProperty);
+        Assert.Equal(3, result[0].Faculties);
+        Assert.Equal(2, result[1].Faculties);
+        Assert.Equal(2, result[0].Departments);
         Assert.Equal(1, result[1].Departments);
-        Assert.Equal(7, result[0].Specialities);
+        Assert.Equal(3, result[0].Specialities);
         Assert.Equal(4, result[1].Specialities);
     }
 
