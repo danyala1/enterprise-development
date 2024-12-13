@@ -1,5 +1,4 @@
 ﻿namespace UniversityData.Tests;
-using System.Linq;
 
 public class UnitTests(UnitFixture unitFixture) : IClassFixture<UnitFixture>
 {
@@ -103,7 +102,6 @@ public class UnitTests(UnitFixture unitFixture) : IClassFixture<UnitFixture>
                           Specialities = groupedUniversities.Sum(x => x.SpecialtyTable.Count)
                       }).ToList();
 
-
         Assert.Equal("муниципальная", result[0].UniversityProp.NameUniversityProperty);
         Assert.Equal("муниципальная", result[1].UniversityProp.NameUniversityProperty); 
         Assert.Equal("муниципальная", result[0].ConstProp.NameConstructionProperty);
@@ -115,5 +113,4 @@ public class UnitTests(UnitFixture unitFixture) : IClassFixture<UnitFixture>
         Assert.Equal(3, result[0].Specialities);
         Assert.Equal(4, result[1].Specialities);
     }
-
 }

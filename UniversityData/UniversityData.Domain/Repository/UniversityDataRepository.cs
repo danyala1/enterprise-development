@@ -1,6 +1,4 @@
-﻿using UniversityData.Domain; 
-
-namespace UniversityData.Domain.Repository;
+﻿namespace UniversityData.Domain.Repository;
 
 public class UniversityDataRepository : IUniversityDataRepository
 {
@@ -12,7 +10,6 @@ public class UniversityDataRepository : IUniversityDataRepository
     private readonly List<SpecialtyTableNode> _specialtyTableNodes;
     private readonly List<UniversityProperty> _universityProperties;
     private readonly List<ConstructionProperty> _constructionProperties;
-
 
     public UniversityDataRepository()
     {
@@ -215,7 +212,6 @@ public class UniversityDataRepository : IUniversityDataRepository
         _universities[2].DepartmentsData.Add(Departments[3]);
         _universities[2].SpecialtyTable.AddRange(new SpecialtyTableNode[] { SpecialtyTableNodes[7], SpecialtyTableNodes[8], SpecialtyTableNodes[9], SpecialtyTableNodes[10] });
     }
-
 
     public List<University> Universities => _universities;
     public List<Department> Departments => _departments;
