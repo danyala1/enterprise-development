@@ -1,83 +1,35 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
-namespace UniversityData.Api.Dto
+﻿namespace UniversityData.Api.Dto;
+/// <summary>
+/// Информация о ректоре
+/// </summary>
+public class RectorGetDto
 {
-    public class RectorGetDto : Controller
-    {
-        // GET: RectorGetDto
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: RectorGetDto/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: RectorGetDto/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: RectorGetDto/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: RectorGetDto/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: RectorGetDto/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: RectorGetDto/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: RectorGetDto/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-    }
+    /// <summary>
+    /// ID
+    /// </summary>
+    public int Id { get; set; }
+    /// <summary>
+    /// Имя ректора
+    /// </summary>
+    public string Name { get; set; }
+    /// <summary>
+    /// Фамилия ректора
+    /// </summary>
+    public string Surname { get; set; }
+    /// <summary>
+    /// Отчество ректора
+    /// </summary>
+    public string Patronymic { get; set; }
+    /// <summary>
+    /// Степень ректора
+    /// </summary>
+    public string Degree { get; set; }
+    /// <summary>
+    /// Звание ректора
+    /// </summary>
+    public string Title { get; set; }
+    /// <summary>
+    /// Должность ректора
+    /// </summary>
+    public string Position { get; set; }
 }

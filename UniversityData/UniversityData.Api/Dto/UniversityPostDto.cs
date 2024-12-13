@@ -1,83 +1,31 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
-namespace UniversityData.Api.Dto
+﻿namespace UniversityData.Api.Dto;
+/// <summary>
+/// Информация об университете
+/// </summary>
+public class UniversityPostDto
 {
-    public class UniversityPostDto : Controller
-    {
-        // GET: UniversityPostDto
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: UniversityPostDto/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: UniversityPostDto/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: UniversityPostDto/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: UniversityPostDto/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: UniversityPostDto/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: UniversityPostDto/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: UniversityPostDto/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-    }
+    /// <summary>
+    /// Регистрационный номер
+    /// </summary>
+    public string Number { get; set; }
+    /// <summary>
+    /// Название университета
+    /// </summary>
+    public string Name { get; set; }
+    /// <summary>
+    /// Адрес университета
+    /// </summary>
+    public string Address { get; set; }
+    /// <summary>
+    /// ID ректора
+    /// </summary>
+    public int RectorId { get; set; }
+    /// <summary>
+    /// ID собственности учреждения
+    /// </summary>
+    public int UniversityPropertyId { get; set; }
+    /// <summary>
+    /// ID собственности зданий университета
+    /// </summary>
+    public int ConstructionPropertyId { get; set; }
 }

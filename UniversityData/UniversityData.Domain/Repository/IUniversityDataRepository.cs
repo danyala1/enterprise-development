@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UniversityData.Domain.Repository
+﻿namespace UniversityData.Domain.Repository;
+public interface IUniversityDataRepository
 {
-    internal class IUniversityDataRepository
-    {
-    }
+    List<Department> Departments { get; }
+    List<Faculty> Faculties { get; }
+    List<Rector> Rectors { get; }
+    List<Specialty> Specialties { get; }
+    List<SpecialtyTableNode> SpecialtyTableNodes { get; }
+    List<University> Universities { get; }
+    List<UniversityProperty> UniversityProperties { get; }
+    List<ConstructionProperty> ConstructionProperties { get; }
 }

@@ -1,39 +1,45 @@
-﻿namespace UniversityData.Domain;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace UniversityData.Domain;
 /// <summary>
 /// Информация о ректор
 /// </summary>
+[Table("rector")]
 public class Rector
 {
     /// <summary>
     /// ID
     /// </summary>
+    [Column("id")]
     public int Id { get; set; }
     /// <summary>
     /// Имя ректора
     /// </summary>
-    public required string Name { get; set; }
+    [Column("name")]
+    public string Name { get; set; }
     /// <summary>
     /// Фамилия ректора
     /// </summary>
-    public required string Surname { get; set; }
+    [Column("surname")]
+    public string Surname { get; set; }
     /// <summary>
     /// Отчество ректора
     /// </summary>
-    public required string Patronymic { get; set; }
+    [Column("patronymic")]
+    public string Patronymic { get; set; }
     /// <summary>
     /// Степень ректора
     /// </summary>
-    public required string Degree { get; set; }
+    [Column("degree")]
+    public string Degree { get; set; }
     /// <summary>
     /// Звание ректора
     /// </summary>
-    public required string Title { get; set; }
+    [Column("title")]
+    public string Title { get; set; }
     /// <summary>
     /// Должность ректора
     /// </summary>
-    public required string Position { get; set; }
-    /// <summary>
-    /// Ссылка на обратную связь
-    /// </summary>
-    public University? University { get; set; }
+    [Column("position")]
+    public string Position { get; set; }
 }

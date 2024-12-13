@@ -1,83 +1,127 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using UniversityData.Api.Dto;
+using UniversityData.Domain;
 
-namespace UniversityData.Api.Controllers
+namespace UniversityData.Api.Controllers;
+
+/// <summary>
+/// Контроллер факультета
+/// </summary>
+[Route("api/[controller]")]
+[ApiController]
+public class UniversityPropertyController : ControllerBase
 {
-    public class UniversityPropertyController : Controller
+    /// <summary>
+    /// Хранение логгера
+    /// </summary>
+    private readonly ILogger<FacultyController> _logger;
+    /// <summary>
+    /// Хранение ContextFactory
+    /// </summary>
+    private readonly IDbContextFactory<UniversityDataDbContext> _contextFactory;
+    /// <summary>
+    /// Хранение маппера
+    /// </summary>
+    private readonly IMapper _mapper;
+    public UniversityPropertyController(ILogger<FacultyController> logger, IDbContextFactory<UniversityDataDbContext> contextFactory, IMapper mapper)
     {
-        // GET: UniversityPropertyController
-        public ActionResult Index()
+        _logger = logger;
+        _contextFactory = contextFactory;
+        _mapper = mapper;
+    }
+    /// <summary>
+    /// GET-запрос на получение всех элементов коллекции
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    public async Task<IEnumerable<UniversityPropertyGetDto>> Get()
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        var universityProperties = await ctx.UniversityProperties.ToArrayAsync();
+        _logger.LogInformation("Get all university properties");
+        return _mapper.Map<IEnumerable<UniversityPropertyGetDto>>(universityProperties);
+    }
+    /// <summary>
+    /// GET-запрос на получение элемента в соответствии с ID
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("{id}")]
+    public async Task<ActionResult<UniversityPropertyGetDto?>> Get(int id)
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        var universityProperty = ctx.UniversityProperties.FirstOrDefault(universityProperty => universityProperty.Id == id);
+        if (universityProperty == null)
         {
-            return View();
+            _logger.LogInformation("Not found university property with id: {0}", id);
+            return NotFound();
         }
-
-        // GET: UniversityPropertyController/Details/5
-        public ActionResult Details(int id)
+        else
         {
-            return View();
+            _logger.LogInformation("Get university property with id {0}", id);
+            return Ok(_mapper.Map<UniversityPropertyGetDto>(universityProperty));
         }
-
-        // GET: UniversityPropertyController/Create
-        public ActionResult Create()
+    }
+    /// <summary>
+    /// POST-запрос на добавление нового элемента в коллекцию
+    /// </summary>
+    /// <param name="universityProperty"></param>
+    [HttpPost]
+    public async Task<ActionResult> Post([FromBody] UniversityPropertyPostDto universityProperty)
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        await ctx.UniversityProperties.AddAsync(_mapper.Map<UniversityProperty>(universityProperty));
+        await ctx.SaveChangesAsync();
+        _logger.LogInformation("Add new university property");
+        return Ok();
+    }
+    /// <summary>
+    /// PUT-запрос на замену существующего элемента коллекции
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="universityPropertyToPut"></param>
+    /// <returns></returns>
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Put(int id, [FromBody] UniversityPropertyPostDto universityPropertyToPut)
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        var universityProperty = ctx.UniversityProperties.FirstOrDefault(universityProperty => universityProperty.Id == id);
+        if (universityProperty == null)
         {
-            return View();
+            _logger.LogInformation("Not found university property with id: {0}", id);
+            return NotFound();
         }
-
-        // POST: UniversityPropertyController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        else
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _mapper.Map<UniversityPropertyPostDto, UniversityProperty>(universityPropertyToPut, universityProperty);
+            await ctx.SaveChangesAsync();
+            _logger.LogInformation("Update university property with id: {0}", id);
+            return Ok();
         }
-
-        // GET: UniversityPropertyController/Edit/5
-        public ActionResult Edit(int id)
+    }
+    /// <summary>
+    /// DELETE-запрос на удаление элемента из коллекции
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        var universityProperty = ctx.UniversityProperties.FirstOrDefault(universityProperty => universityProperty.Id == id);
+        if (universityProperty == null)
         {
-            return View();
+            _logger.LogInformation("Not found university property with id: {0}", id);
+            return NotFound();
         }
-
-        // POST: UniversityPropertyController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        else
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: UniversityPropertyController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: UniversityPropertyController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            ctx.UniversityProperties.Remove(universityProperty);
+            await ctx.SaveChangesAsync();
+            _logger.LogInformation("Delete university property with id: {0}", id);
+            return Ok();
         }
     }
 }

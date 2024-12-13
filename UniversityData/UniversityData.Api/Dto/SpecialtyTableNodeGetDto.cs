@@ -1,83 +1,23 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
-namespace UniversityData.Api.Dto
+﻿namespace UniversityData.Api.Dto;
+/// <summary>
+/// Узел таблицы связи специальности и количества групп
+/// </summary>
+public class SpecialtyTableNodeGetDto
 {
-    public class SpecialtyTableNodeGetDto : Controller
-    {
-        // GET: SpecialtyTableNodeGetDto
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: SpecialtyTableNodeGetDto/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: SpecialtyTableNodeGetDto/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: SpecialtyTableNodeGetDto/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: SpecialtyTableNodeGetDto/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: SpecialtyTableNodeGetDto/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: SpecialtyTableNodeGetDto/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: SpecialtyTableNodeGetDto/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-    }
+    /// <summary>
+    /// ID
+    /// </summary>
+    public int Id { get; set; }
+    /// <summary>
+    /// Специальность
+    /// </summary>
+    public int SpecialtyId { get; set; }
+    /// <summary>
+    /// Количество групп
+    /// </summary>
+    public int CountGroups { get; set; }
+    /// <summary>
+    /// ID университета
+    /// </summary>
+    public int UniversityId { get; set; }
 }

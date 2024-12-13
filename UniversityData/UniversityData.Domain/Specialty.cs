@@ -1,24 +1,29 @@
-﻿namespace UniversityData.Domain;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace UniversityData.Domain;
 /// <summary>
 /// Специальность
 /// </summary>
+[Table("specialty")]
 public class Specialty
 {
     /// <summary>
     /// ID
     /// </summary>
+    [Column("id")]
     public int Id { get; set; }
     /// <summary>
     /// Название специальности
     /// </summary>
-    public required string Name { get; set; }
+    [Column("name")]
+    public string Name { get; set; }
     /// <summary>
     /// Код-шифр специальности 
     /// </summary>
-    public required string Code { get; set; }
+    [Column("code")]
+    public string Code { get; set; }
     /// <summary>
-    /// Ссылка на обратную связь
+    /// Записи в таблице связи
     /// </summary>
-    public SpecialtyTableNode? Node { get; set; }
-
+    public List<SpecialtyTableNode> SpecialtyTableNodes { get; set; }
 }

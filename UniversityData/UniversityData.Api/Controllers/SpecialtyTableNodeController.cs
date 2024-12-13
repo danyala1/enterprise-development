@@ -1,83 +1,127 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using UniversityData.Api.Dto;
+using UniversityData.Domain;
+namespace UniversityData.Api.Controllers;
 
-namespace UniversityData.Api.Controllers
+/// <summary>
+/// Контроллер связи университетов со специальностями
+/// </summary>
+[Route("api/[controller]")]
+[ApiController]
+public class SpecialtyTableNodeController : ControllerBase
 {
-    public class SpecialtyTableNodeController : Controller
+    /// <summary>
+    /// Хранение логгера
+    /// </summary>
+    private readonly ILogger<SpecialtyTableNodeController> _logger;
+    /// <summary>
+    /// Хранение ContextFactory
+    /// </summary>
+    private readonly IDbContextFactory<UniversityDataDbContext> _contextFactory;
+    /// <summary>
+    /// Хранение маппера
+    /// </summary>
+    private readonly IMapper _mapper;
+    public SpecialtyTableNodeController(ILogger<SpecialtyTableNodeController> logger, IDbContextFactory<UniversityDataDbContext> contextFactory, IMapper mapper)
     {
-        // GET: SpecialtyTableNodeController
-        public ActionResult Index()
-        {
-            return View();
-        }
+        _logger = logger;
+        _contextFactory = contextFactory;
+        _mapper = mapper;
+    }
 
-        // GET: SpecialtyTableNodeController/Details/5
-        public ActionResult Details(int id)
+    /// <summary>
+    /// GET-запрос на получение всех элементов коллекции
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    public async Task<IEnumerable<SpecialtyTableNodeGetDto>> Get()
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        _logger.LogInformation("Get all specialtyTableNodes");
+        return ctx.SpecialtyTableNodes.Select(specialtyTableNode => _mapper.Map<SpecialtyTableNodeGetDto>(specialtyTableNode));
+    }
+    /// <summary>
+    /// GET-запрос на получение элемента в соответствии с ID
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("{id}")]
+    public async Task<ActionResult<SpecialtyTableNodeGetDto?>> Get(int id)
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        var specialtyTableNode = ctx.SpecialtyTableNodes.FirstOrDefault(specialtyTableNode => specialtyTableNode.Id == id);
+        if (specialtyTableNode == null)
         {
-            return View();
+            _logger.LogInformation("Not found specialtyTableNode with id: {0}", id);
+            return NotFound();
         }
-
-        // GET: SpecialtyTableNodeController/Create
-        public ActionResult Create()
+        else
         {
-            return View();
+            _logger.LogInformation("Get specialtyTableNode with id {0}", id);
+            return Ok(_mapper.Map<SpecialtyTableNodeGetDto>(specialtyTableNode));
         }
+    }
+    /// <summary>
+    /// POST-запрос на добавление нового элемента в коллекцию
+    /// </summary>
+    /// <param name="specialtyTableNode"></param>
+    [HttpPost]
+    public async Task<ActionResult> Post([FromBody] SpecialtyTableNodePostDto specialtyTableNode)
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        ctx.SpecialtyTableNodes.Add(_mapper.Map<SpecialtyTableNode>(specialtyTableNode));
+        await ctx.SaveChangesAsync();
+        _logger.LogInformation("Add new specialtyTableNode");
+        return Ok();
 
-        // POST: SpecialtyTableNodeController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+    }
+    /// <summary>
+    /// PUT-запрос на замену существующего элемента коллекции
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="specialtyTableNodeToPut"></param>
+    /// <returns></returns>
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Put(int id, [FromBody] SpecialtyTableNodePostDto specialtyTableNodeToPut)
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        var specialtyTableNode = ctx.SpecialtyTableNodes.FirstOrDefault(specialtyTableNode => specialtyTableNode.Id == id);
+        if (specialtyTableNode == null)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _logger.LogInformation($"Not found specialtyTableNode with id: {id}");
+            return NotFound();
         }
-
-        // GET: SpecialtyTableNodeController/Edit/5
-        public ActionResult Edit(int id)
+        else
         {
-            return View();
+            _mapper.Map<SpecialtyTableNodePostDto, SpecialtyTableNode>(specialtyTableNodeToPut, specialtyTableNode);
+            await ctx.SaveChangesAsync();
+            _logger.LogInformation("Update specialtyTableNode with id: {0}", id);
+            return Ok();
         }
-
-        // POST: SpecialtyTableNodeController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+    }
+    /// <summary>
+    /// DELETE-запрос на удаление элемента из коллекции
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        var specialtyTableNode = ctx.SpecialtyTableNodes.FirstOrDefault(specialtyTableNode => specialtyTableNode.Id == id);
+        if (specialtyTableNode == null)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _logger.LogInformation($"Not found specialtyTableNode with id: {id}");
+            return NotFound();
         }
-
-        // GET: SpecialtyTableNodeController/Delete/5
-        public ActionResult Delete(int id)
+        else
         {
-            return View();
-        }
-
-        // POST: SpecialtyTableNodeController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            ctx.SpecialtyTableNodes.Remove(specialtyTableNode);
+            await ctx.SaveChangesAsync();
+            _logger.LogInformation("Delete specialtyTableNode with id: {0}", id);
+            return Ok();
         }
     }
 }

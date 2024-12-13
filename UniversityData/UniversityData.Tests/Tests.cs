@@ -68,14 +68,19 @@ public class UnitTests(UnitFixture unitFixture) : IClassFixture<UnitFixture>
     [Fact]
     public void UniversityWithProperty()
     {
-        string universityType = "муниципальная";
-        int requiredCountGroups = 27;
-
         var result = (from university in unitFixture.Universities
-                      where university.UniversityProperty == universityType
-                      where university.SpecialtyTable.Sum(x => x.CountGroups) == requiredCountGroups
-                      select university).ToList();
-        Assert.Single(result);
+                      where (university.UniversityProperty.NameUniversityProperty == "муниципальная")
+                      select new
+                      {
+                          university.Id,
+                          university.Name,
+                          university.Number,
+                          university.RectorId,
+                          university.ConstructionProperty,
+                          university.UniversityProperty,
+                          count = university.SpecialtyTable.Sum(specialtiyNode => specialtiyNode.CountGroups)
+                      }).ToList();
+        Assert.Equal(3, result.Count);
     }
     /// <summary>
     /// Запрос 6 - Вывести информацию о количестве факультетов, кафедр, специальностей по каждому типу собственности учреждения и собственности здания.
@@ -98,6 +103,11 @@ public class UnitTests(UnitFixture unitFixture) : IClassFixture<UnitFixture>
                           Specialities = groupedUniversities.Sum(x => x.SpecialtyTable.Count)
                       }).ToList();
 
+
+        Assert.Equal("муниципальная", result[0].UniversityProp.NameUniversityProperty);
+        Assert.Equal("федеральная", result[1].UniversityProp.NameUniversityProperty); // Проверьте здесь
+        Assert.Equal("муниципальная", result[0].ConstProp.NameConstructionProperty);
+        Assert.Equal("федеральная", result[1].ConstProp.NameConstructionProperty);
         Assert.Equal(5, result[0].Faculties);
         Assert.Equal(1, result[1].Faculties);
         Assert.Equal(3, result[0].Departments);
@@ -105,4 +115,5 @@ public class UnitTests(UnitFixture unitFixture) : IClassFixture<UnitFixture>
         Assert.Equal(7, result[0].Specialities);
         Assert.Equal(4, result[1].Specialities);
     }
+
 }

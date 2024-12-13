@@ -1,83 +1,29 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using UniversityData.Domain;
+using UniversityData.Api.Dto;
 
-namespace UniversityData.Api
+namespace UniversityData.Api;
+
+public class MappingProfile : Profile
 {
-    public class MappingProfile : Controller
+    public MappingProfile()
     {
-        // GET: MappingProfile
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: MappingProfile/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: MappingProfile/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: MappingProfile/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: MappingProfile/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: MappingProfile/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: MappingProfile/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: MappingProfile/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        CreateMap<DepartmentPostDto, Department>();
+        CreateMap<Department, DepartmentGetDto>();
+        CreateMap<FacultyPostDto, Faculty>();
+        CreateMap<Faculty, FacultyGetDto>();
+        CreateMap<RectorPostDto, Rector>();
+        CreateMap<Rector, RectorGetDto>();
+        CreateMap<SpecialtyPostDto, Specialty>();
+        CreateMap<Specialty, SpecialtyGetDto>();
+        CreateMap<UniversityPostDto, University>();
+        CreateMap<University, UniversityGetDto>();
+        CreateMap<SpecialtyTableNodePostDto, SpecialtyTableNode>();
+        CreateMap<SpecialtyTableNode, SpecialtyTableNodeGetDto>();
+        CreateMap<University, UniversityGetStructureDto>();
+        CreateMap<UniversityPropertyPostDto, UniversityProperty>();
+        CreateMap<UniversityProperty, UniversityPropertyGetDto>();
+        CreateMap<ConstructionPropertyPostDto, ConstructionProperty>();
+        CreateMap<ConstructionProperty, ConstructionPropertyGetDto>();
     }
 }

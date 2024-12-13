@@ -1,83 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
-namespace UniversityData.Api.Dto
+﻿namespace UniversityData.Api.Dto;
+/// <summary>
+/// Специальность
+/// </summary>
+public class SpecialtyPostDto
 {
-    public class SpecialtyPostDto : Controller
-    {
-        // GET: SpecialtyPostDto
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: SpecialtyPostDto/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: SpecialtyPostDto/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: SpecialtyPostDto/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: SpecialtyPostDto/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: SpecialtyPostDto/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: SpecialtyPostDto/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: SpecialtyPostDto/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-    }
+    /// <summary>
+    /// Название специальности
+    /// </summary>
+    public string Name { get; set; }
+    /// <summary>
+    /// Код-шифр специальности 
+    /// </summary>
+    public string Code { get; set; }
 }

@@ -1,83 +1,128 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using UniversityData.Api.Dto;
+using UniversityData.Domain;
+namespace UniversityData.Api.Controllers;
 
-namespace UniversityData.Api.Controllers
+/// <summary>
+/// Контроллер специальности
+/// </summary>
+[Route("api/[controller]")]
+[ApiController]
+public class SpecialtyController : ControllerBase
 {
-    public class SpecialtyController : Controller
+    /// <summary>
+    /// Хранение логгера
+    /// </summary>
+    private readonly ILogger<SpecialtyController> _logger;
+    /// <summary>
+    /// Хранение ContextFactory
+    /// </summary>
+    private readonly IDbContextFactory<UniversityDataDbContext> _contextFactory;
+    /// <summary>
+    /// Хранение маппера
+    /// </summary>
+    private readonly IMapper _mapper;
+    public SpecialtyController(ILogger<SpecialtyController> logger, IDbContextFactory<UniversityDataDbContext> contextFactory, IMapper mapper)
     {
-        // GET: SpecialtyController
-        public ActionResult Index()
-        {
-            return View();
-        }
+        _logger = logger;
+        _contextFactory = contextFactory;
+        _mapper = mapper;
+    }
 
-        // GET: SpecialtyController/Details/5
-        public ActionResult Details(int id)
+    /// <summary>
+    /// GET-запрос на получение всех элементов коллекции
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    public async Task<IEnumerable<SpecialtyGetDto>> Get()
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        var specialties = await ctx.Specialties.ToArrayAsync();
+        _logger.LogInformation("Get all specialties");
+        return _mapper.Map<IEnumerable<SpecialtyGetDto>>(specialties);
+    }
+    /// <summary>
+    /// GET-запрос на получение элемента в соответствии с ID
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("{id}")]
+    public async Task<ActionResult<SpecialtyGetDto?>> Get(int id)
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        var specialty = ctx.Specialties.FirstOrDefault(specialty => specialty.Id == id);
+        if (specialty == null)
         {
-            return View();
+            _logger.LogInformation("Not found specialty with id: {0}", id);
+            return NotFound();
         }
-
-        // GET: SpecialtyController/Create
-        public ActionResult Create()
+        else
         {
-            return View();
+            _logger.LogInformation("Get specialty with id {0}", id);
+            return Ok(_mapper.Map<SpecialtyGetDto>(specialty));
         }
+    }
+    /// <summary>
+    /// POST-запрос на добавление нового элемента в коллекцию
+    /// </summary>
+    /// <param name="specialty"></param>
+    [HttpPost]
+    public async Task<ActionResult> Post([FromBody] SpecialtyPostDto specialty)
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        ctx.Specialties.Add(_mapper.Map<Specialty>(specialty));
+        await ctx.SaveChangesAsync();
+        _logger.LogInformation("Add new specialty");
+        return Ok();
 
-        // POST: SpecialtyController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+    }
+    /// <summary>
+    /// PUT-запрос на замену существующего элемента коллекции
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="specialtyToPut"></param>
+    /// <returns></returns>
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Put(int id, [FromBody] SpecialtyPostDto specialtyToPut)
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        var specialty = ctx.Specialties.FirstOrDefault(specialty => specialty.Id == id);
+        if (specialty == null)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _logger.LogInformation($"Not found specialty with id: {id}");
+            return NotFound();
         }
-
-        // GET: SpecialtyController/Edit/5
-        public ActionResult Edit(int id)
+        else
         {
-            return View();
+            _mapper.Map<SpecialtyPostDto, Specialty>(specialtyToPut, specialty);
+            await ctx.SaveChangesAsync();
+            _logger.LogInformation("Update specialty with id: {0}", id);
+            return Ok();
         }
-
-        // POST: SpecialtyController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+    }
+    /// <summary>
+    /// DELETE-запрос на удаление элемента из коллекции
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        var specialty = ctx.Specialties.FirstOrDefault(specialty => specialty.Id == id);
+        if (specialty == null)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _logger.LogInformation($"Not found specialty with id: {id}");
+            return NotFound();
         }
-
-        // GET: SpecialtyController/Delete/5
-        public ActionResult Delete(int id)
+        else
         {
-            return View();
-        }
-
-        // POST: SpecialtyController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            ctx.Specialties.Remove(specialty);
+            await ctx.SaveChangesAsync();
+            _logger.LogInformation("Delete specialty with id: {0}", id);
+            return Ok();
         }
     }
 }

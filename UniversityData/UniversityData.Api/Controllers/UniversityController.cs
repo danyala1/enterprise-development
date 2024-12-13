@@ -1,83 +1,126 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using UniversityData.Api.Dto;
+using UniversityData.Domain;
+namespace UniversityData.Api.Controllers;
 
-namespace UniversityData.Api.Controllers
+/// <summary>
+/// Контроллер университета
+/// </summary>
+[Route("api/[controller]")]
+[ApiController]
+public class UniversityController : ControllerBase
 {
-    public class UniversityController : Controller
+    /// <summary>
+    /// Хранение логгера
+    /// </summary>
+    private readonly ILogger<UniversityController> _logger;
+    /// <summary>
+    /// Хранение ContextFactory
+    /// </summary>
+    private readonly IDbContextFactory<UniversityDataDbContext> _contextFactory;
+    /// <summary>
+    /// Хранение маппера
+    /// </summary>
+    private readonly IMapper _mapper;
+    public UniversityController(ILogger<UniversityController> logger, IDbContextFactory<UniversityDataDbContext> contextFactory, IMapper mapper)
     {
-        // GET: UniversityController
-        public ActionResult Index()
-        {
-            return View();
-        }
+        _logger = logger;
+        _contextFactory = contextFactory;
+        _mapper = mapper;
+    }
 
-        // GET: UniversityController/Details/5
-        public ActionResult Details(int id)
+    /// <summary>
+    /// GET-запрос на получение всех элементов коллекции
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    public async Task<IEnumerable<UniversityGetDto>> Get()
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        _logger.LogInformation("Get all universities");
+        return ctx.Universities.Select(university => _mapper.Map<UniversityGetDto>(university));
+    }
+    /// <summary>
+    /// GET-запрос на получение элемента в соответствии с ID
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("{id}")]
+    public async Task<ActionResult<UniversityGetDto?>> Get(int id)
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        var university = ctx.Universities.FirstOrDefault(university => university.Id == id);
+        if (university == null)
         {
-            return View();
+            _logger.LogInformation("Not found university with id: {0}", id);
+            return NotFound();
         }
-
-        // GET: UniversityController/Create
-        public ActionResult Create()
+        else
         {
-            return View();
+            _logger.LogInformation("Get university with id {0}", id);
+            return Ok(_mapper.Map<UniversityGetDto>(university));
         }
-
-        // POST: UniversityController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+    }
+    /// <summary>
+    /// POST-запрос на добавление нового элемента в коллекцию
+    /// </summary>
+    /// <param name="university"></param>
+    [HttpPost]
+    public async Task<ActionResult> Post([FromBody] UniversityPostDto university)
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        ctx.Universities.Add(_mapper.Map<University>(university));
+        await ctx.SaveChangesAsync();
+        _logger.LogInformation("Add new university");
+        return Ok();
+    }
+    /// <summary>
+    /// PUT-запрос на замену существующего элемента коллекции
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="universityToPut"></param>
+    /// <returns></returns>
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Put(int id, [FromBody] UniversityPostDto universityToPut)
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        var university = ctx.Universities.FirstOrDefault(university => university.Id == id);
+        if (university == null)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _logger.LogInformation("Not found university with id: {0}", id);
+            return NotFound();
         }
-
-        // GET: UniversityController/Edit/5
-        public ActionResult Edit(int id)
+        else
         {
-            return View();
+            _mapper.Map<UniversityPostDto, University>(universityToPut, university);
+            await ctx.SaveChangesAsync();
+            _logger.LogInformation("Update university with id: {0}", id);
+            return Ok();
         }
-
-        // POST: UniversityController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+    }
+    /// <summary>
+    /// DELETE-запрос на удаление элемента из коллекции
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        var university = ctx.Universities.FirstOrDefault(university => university.Id == id);
+        if (university == null)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _logger.LogInformation("Not found university with id: {0}", id);
+            return NotFound();
         }
-
-        // GET: UniversityController/Delete/5
-        public ActionResult Delete(int id)
+        else
         {
-            return View();
-        }
-
-        // POST: UniversityController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            ctx.Universities.Remove(university);
+            await ctx.SaveChangesAsync();
+            _logger.LogInformation("Delete university with id: {0}", id);
+            return Ok();
         }
     }
 }

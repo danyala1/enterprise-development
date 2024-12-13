@@ -1,83 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
-namespace UniversityData.Api.Dto
+﻿namespace UniversityData.Api.Dto;
+/// <summary>
+/// Собственность университета
+/// </summary>
+public class UniversityPropertyGetDto
 {
-    public class UniversityPropertyGetDto : Controller
-    {
-        // GET: UniversityPropertyGetDto
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: UniversityPropertyGetDto/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: UniversityPropertyGetDto/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: UniversityPropertyGetDto/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: UniversityPropertyGetDto/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: UniversityPropertyGetDto/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: UniversityPropertyGetDto/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: UniversityPropertyGetDto/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-    }
+    /// <summary>
+    /// ID
+    /// </summary>
+    public int Id { get; set; }
+    /// <summary>
+    /// Название собственности университета
+    /// </summary>
+    public string NameUniversityProperty { get; set; }
 }

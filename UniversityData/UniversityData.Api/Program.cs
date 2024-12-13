@@ -1,83 +1,40 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Reflection;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using UniversityData.Domain;
+using UniversityData.Domain.Repository;
+using UniversityData.Api;
 
-namespace UniversityData.Api
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContextFactory<UniversityDataDbContext>(options =>
+    options.UseMySQL(builder.Configuration.GetConnectionString("UniversityData")!)
+);
+
+var mapperConfig = new MapperConfiguration(config => config.AddProfile(new MappingProfile()));
+var mapper = mapperConfig.CreateMapper();
+
+builder.Services.AddSwaggerGen(options =>
 {
-    public class Program : Controller
-    {
-        // GET: Program
-        public ActionResult Index()
-        {
-            return View();
-        }
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
 
-        // GET: Program/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
+builder.Services.AddSingleton(mapper);
+builder.Services.AddSingleton<IUniversityDataRepository, UniversityDataRepository>();
 
-        // GET: Program/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
-        // POST: Program/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+var app = builder.Build();
 
-        // GET: Program/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Program/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Program/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Program/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-    }
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+app.MapControllers();
+app.Run();
