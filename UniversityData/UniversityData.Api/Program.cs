@@ -16,6 +16,7 @@ builder.Services.AddDbContextFactory<UniversityDataDbContext>(options =>
     )
 );
 
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddSingleton(mapper);
 builder.Services.AddSingleton<IUniversityDataRepository, UniversityDataRepository>();
 
