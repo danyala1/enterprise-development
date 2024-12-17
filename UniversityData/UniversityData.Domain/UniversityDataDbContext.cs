@@ -43,6 +43,21 @@ public class UniversityDataDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<University>()
+                 .HasOne<Rector>()
+                 .WithMany()
+                 .HasForeignKey(u => u.RectorId);
+
+        modelBuilder.Entity<University>()
+            .HasMany(u => u.DepartmentsData)
+            .WithOne(d => d.University)
+            .HasForeignKey(d => d.UniversityId);
+
+        modelBuilder.Entity<University>()
+            .HasMany(u => u.FacultiesData)
+            .WithOne(f => f.University)
+            .HasForeignKey(f => f.UniversityId);
+
         modelBuilder.Entity<UniversityProperty>().HasData(
             new UniversityProperty
             {

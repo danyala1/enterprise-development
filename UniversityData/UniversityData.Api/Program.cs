@@ -18,7 +18,12 @@ builder.Services.AddDbContextFactory<UniversityDataDbContext>(options =>
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddSingleton(mapper);
-builder.Services.AddSingleton<IUniversityDataRepository, UniversityDataRepository>();
+builder.Services.AddSingleton<IRectorRepository, RectorRepository>();
+builder.Services.AddSingleton<IFacultyRepository, FacultyRepository>();
+builder.Services.AddSingleton<ISpecialtyRepository, SpecialtyRepository>();
+builder.Services.AddSingleton<IDepartmentRepository, DepartmentRepository>();
+builder.Services.AddSingleton<ISpecialtyTableNodeRepository, SpecialtyTableNodeRepository>();
+builder.Services.AddSingleton<IUniversityRepository, UniversityRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
