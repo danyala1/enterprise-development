@@ -6,12 +6,15 @@ using UniversityData.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContextFactory<UniversityDataDbContext>(options =>
-    options.UseMySQL(builder.Configuration.GetConnectionString("UniversityData")!)
-);
-
 var mapperConfig = new MapperConfiguration(config => config.AddProfile(new MappingProfile()));
 var mapper = mapperConfig.CreateMapper();
+
+builder.Services.AddDbContextFactory<UniversityDataDbContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("UniversityData")!,
+        new MySqlServerVersion(new Version(8, 0, 39))
+    )
+);
 
 builder.Services.AddSingleton(mapper);
 builder.Services.AddSingleton<IUniversityDataRepository, UniversityDataRepository>();
