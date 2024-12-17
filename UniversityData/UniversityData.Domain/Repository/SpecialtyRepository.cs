@@ -13,32 +13,26 @@ public class SpecialtyRepository : ISpecialtyRepository
 
     private void InitializeSpecialties()
     {
-        for (var i = 0; i < 5; ++i)
+        _specialties.AddRange(GetInitialSpecialties());
+    }
+
+    private IEnumerable<Specialty> GetInitialSpecialties()
+    {
+        return new List<Specialty>
         {
-            _specialties.Add(new Specialty { Id = i });
-        }
-
-        _specialties[0].Name = "Прикладная информатика";
-        _specialties[0].Code = "09.03.03";
-
-        _specialties[1].Name = "Информационные системы и технологии";
-        _specialties[1].Code = "09.03.02";
-
-        _specialties[2].Name = "Информатика и вычислительная техника";
-        _specialties[2].Code = "09.03.01";
-
-        _specialties[3].Name = "Прикладная математика и информатика";
-        _specialties[3].Code = "01.03.02";
-
-        _specialties[4].Name = "Информационная безопасность автоматизированных систем";
-        _specialties[4].Code = "10.05.03";
+            new Specialty { Id = 0, Name = "Прикладная информатика", Code = "09.03.03" },
+            new Specialty { Id = 1, Name = "Информационные системы и технологии", Code = "09.03.02" },
+            new Specialty { Id = 2, Name = "Информатика и вычислительная техника", Code = "09.03.01" },
+            new Specialty { Id = 3, Name = "Прикладная математика и информатика", Code = "01.03.02" },
+            new Specialty { Id = 4, Name = "Информационная безопасность автоматизированных систем", Code = "10.05.03" }
+        };
     }
 
     public void Add(Specialty specialty)
     {
         if (specialty == null) throw new ArgumentNullException(nameof(specialty));
 
-        specialty.Id = _specialties.Count; // Присвоение нового ID
+        specialty.Id = _specialties.Count; 
         _specialties.Add(specialty);
     }
 

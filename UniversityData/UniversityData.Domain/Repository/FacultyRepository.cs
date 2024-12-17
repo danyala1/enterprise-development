@@ -13,47 +13,69 @@ public class FacultyRepository : IFacultyRepository
 
     private void InitializeFaculties()
     {
-        for (var i = 0; i < 6; ++i)
+        _faculties.AddRange(GetInitialFaculties());
+    }
+
+    private IEnumerable<Faculty> GetInitialFaculties()
+    {
+        return new List<Faculty>
+    {
+        new Faculty
         {
-            _faculties.Add(new Faculty { Id = i });
+            Id = 0,
+            Name = "Институт информатики и кибернетики",
+            WorkersCount = 16,
+            StudentsCount = 110,
+            UniversityId = 0
+        },
+        new Faculty
+        {
+            Id = 1,
+            Name = "Институт экономики и управления",
+            WorkersCount = 22,
+            StudentsCount = 81,
+            UniversityId = 0
+        },
+        new Faculty
+        {
+            Id = 2,
+            Name = "Юридический институт",
+            WorkersCount = 11,
+            StudentsCount = 65,
+            UniversityId = 0
+        },
+        new Faculty
+        {
+            Id = 3,
+            Name = "Социально-гуманитарный институт",
+            WorkersCount = 30,
+            StudentsCount = 200,
+            UniversityId = 1
+        },
+        new Faculty
+        {
+            Id = 4,
+            Name = "Институт доп. образования",
+            WorkersCount = 22,
+            StudentsCount = 62,
+            UniversityId = 1
+        },
+        new Faculty
+        {
+            Id = 5,
+            Name = "Институт двигателей и энергетических установок",
+            WorkersCount = 16,
+            StudentsCount = 70,
+            UniversityId = 2
         }
-
-        _faculties[0].Name = "Институт информатики и кибернетики";
-        _faculties[0].WorkersCount = 16;
-        _faculties[0].StudentsCount = 110;
-        _faculties[0].UniversityId = 0;
-
-        _faculties[1].Name = "Институт экономики и управления";
-        _faculties[1].WorkersCount = 22;
-        _faculties[1].StudentsCount = 81;
-        _faculties[1].UniversityId = 0;
-
-        _faculties[2].Name = "Юридический институт";
-        _faculties[2].WorkersCount = 11;
-        _faculties[2].StudentsCount = 65;
-        _faculties[2].UniversityId = 0;
-
-        _faculties[3].Name = "Социально-гуманитарный институт";
-        _faculties[3].WorkersCount = 30;
-        _faculties[3].StudentsCount = 200;
-        _faculties[3].UniversityId = 1;
-
-        _faculties[4].Name = "Институт доп. образования";
-        _faculties[4].WorkersCount = 22;
-        _faculties[4].StudentsCount = 62;
-        _faculties[4].UniversityId = 1;
-
-        _faculties[5].Name = "Институт двигателей и энергетических установок";
-        _faculties[5].WorkersCount = 16;
-        _faculties[5].StudentsCount = 70;
-        _faculties[5].UniversityId = 2;
+    };
     }
 
     public void Add(Faculty faculty)
     {
         if (faculty == null) throw new ArgumentNullException(nameof(faculty));
 
-        faculty.Id = _faculties.Count; // Присвоение нового ID
+        faculty.Id = _faculties.Count;
         _faculties.Add(faculty);
     }
 

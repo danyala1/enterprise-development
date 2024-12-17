@@ -17,35 +17,109 @@ public class SpecialtyTableNodeRepository : ISpecialtyTableNodeRepository
 
     private void InitializeSpecialtyTableNodes()
     {
-        for (var i = 0; i < 11; ++i)
+        _specialtyTableNodes.AddRange(GetInitialSpecialtyTableNodes());
+    }
+
+    private IEnumerable<SpecialtyTableNode> GetInitialSpecialtyTableNodes()
+    {
+        return new List<SpecialtyTableNode>
+    {
+        new SpecialtyTableNode
         {
-            _specialtyTableNodes.Add(new SpecialtyTableNode { Id = i });
+            Id = 0,
+            Specialty = _specialties[0],
+            CountGroups = 8,
+            UniversityId = 0,
+            SpecialtyId = 0
+        },
+        new SpecialtyTableNode
+        {
+            Id = 1,
+            Specialty = _specialties[0],
+            CountGroups = 17,
+            UniversityId = 0,
+            SpecialtyId = 0
+        },
+        new SpecialtyTableNode
+        {
+            Id = 2,
+            Specialty = _specialties[1],
+            CountGroups = 6,
+            UniversityId = 0,
+            SpecialtyId = 1
+        },
+        new SpecialtyTableNode
+        {
+            Id = 3,
+            Specialty = _specialties[1],
+            CountGroups = 6,
+            UniversityId = 1,
+            SpecialtyId = 1
+        },
+        new SpecialtyTableNode
+        {
+            Id = 4,
+            Specialty = _specialties[2],
+            CountGroups = 9,
+            UniversityId = 1,
+            SpecialtyId = 2
+        },
+        new SpecialtyTableNode
+        {
+            Id = 5,
+            Specialty = _specialties[2],
+            CountGroups = 4,
+            UniversityId = 1,
+            SpecialtyId = 2
+        },
+        new SpecialtyTableNode
+        {
+            Id = 6,
+            Specialty = _specialties[3],
+            CountGroups = 8,
+            UniversityId = 1,
+            SpecialtyId = 3
+        },
+        new SpecialtyTableNode
+        {
+            Id = 7,
+            Specialty = _specialties[3],
+            CountGroups = 8,
+            UniversityId = 2,
+            SpecialtyId = 3
+        },
+        new SpecialtyTableNode
+        {
+            Id = 8,
+            Specialty = _specialties[4],
+            CountGroups = 10,
+            UniversityId = 2,
+            SpecialtyId = 4
+        },
+        new SpecialtyTableNode
+        {
+            Id = 9,
+            Specialty = _specialties[4],
+            CountGroups = 8,
+            UniversityId = 2,
+            SpecialtyId = 4
+        },
+        new SpecialtyTableNode
+        {
+            Id = 10,
+            Specialty = _specialties[4],
+            CountGroups = 8,
+            UniversityId = 2,
+            SpecialtyId = 4
         }
-
-        // Инициализация узлов таблицы специальностей
-        _specialtyTableNodes[0].Specialty = _specialties[0];
-        _specialtyTableNodes[0].CountGroups = 8;
-        _specialtyTableNodes[0].UniversityId = 0;
-        _specialtyTableNodes[0].SpecialtyId = 0;
-
-        _specialtyTableNodes[1].Specialty = _specialties[0];
-        _specialtyTableNodes[1].CountGroups = 17;
-        _specialtyTableNodes[1].UniversityId = 0;
-        _specialtyTableNodes[1].SpecialtyId = 0;
-
-        _specialtyTableNodes[2].Specialty = _specialties[1];
-        _specialtyTableNodes[2].CountGroups = 6;
-        _specialtyTableNodes[2].UniversityId = 0;
-        _specialtyTableNodes[2].SpecialtyId = 1;
-
-        // Продолжайте инициализацию для остальных узлов...
+    };
     }
 
     public void Add(SpecialtyTableNode specialtyTableNode)
     {
         if (specialtyTableNode == null) throw new ArgumentNullException(nameof(specialtyTableNode));
 
-        specialtyTableNode.Id = _specialtyTableNodes.Count; // Присвоение нового ID
+        specialtyTableNode.Id = _specialtyTableNodes.Count;
         _specialtyTableNodes.Add(specialtyTableNode);
     }
 

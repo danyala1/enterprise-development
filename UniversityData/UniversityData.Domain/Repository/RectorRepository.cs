@@ -13,38 +13,51 @@ public class RectorRepository : IRectorRepository
 
     private void InitializeRectors()
     {
-        for (var i = 0; i < 3; ++i)
+        _rectors.AddRange(GetInitialRectors());
+    }
+
+    private IEnumerable<Rector> GetInitialRectors()
+    {
+        return new List<Rector>
+    {
+        new Rector
         {
-            _rectors.Add(new Rector { Id = i });
+            Id = 0,
+            Name = "Владимир",
+            Surname = "Богатырев",
+            Patronymic = "Дмитриевич",
+            Degree = "Доктор экономических наук",
+            Title = "Профессор",
+            Position = "Ректор"
+        },
+        new Rector
+        {
+            Id = 1,
+            Name = "Дмитрий",
+            Surname = "Быков",
+            Patronymic = "Евгеньевич",
+            Degree = "Доктор технических наук",
+            Title = "Профессор",
+            Position = "Ректор"
+        },
+        new Rector
+        {
+            Id = 2,
+            Name = "Вадим",
+            Surname = "Ружников",
+            Patronymic = "Александрович",
+            Degree = "Кандидат технических наук",
+            Title = "Доцент",
+            Position = "Ректор"
         }
-
-        _rectors[0].Name = "Владимир";
-        _rectors[0].Surname = "Богатырев";
-        _rectors[0].Patronymic = "Дмитриевич";
-        _rectors[0].Degree = "Доктор экономических наук";
-        _rectors[0].Title = "Профессор";
-        _rectors[0].Position = "Ректор";
-
-        _rectors[1].Name = "Дмитрий";
-        _rectors[1].Surname = "Быков";
-        _rectors[1].Patronymic = "Евгеньевич";
-        _rectors[1].Degree = "Доктор технических наук";
-        _rectors[1].Title = "Профессор";
-        _rectors[1].Position = "Ректор";
-
-        _rectors[2].Name = "Вадим";
-        _rectors[2].Surname = "Ружников";
-        _rectors[2].Patronymic = "Александрович";
-        _rectors[2].Degree = "Кандидат технических наук";
-        _rectors[2].Title = "Доцент";
-        _rectors[2].Position = "Ректор";
+    };
     }
 
     public void Add(Rector rector)
     {
         if (rector == null) throw new ArgumentNullException(nameof(rector));
 
-        rector.Id = _rectors.Count; // Присвоение нового ID
+        rector.Id = _rectors.Count; 
         _rectors.Add(rector);
     }
 

@@ -30,49 +30,75 @@ public class UniversityRepository : IUniversityRepository
         InitializeUniversities();
     }
 
+
     private void InitializeUniversities()
     {
-        for (var i = 0; i < 3; ++i)
+        foreach (var university in GetInitialUniversities())
         {
-            _universities.Add(new University { Id = i });
+            _universities.Add(university);
         }
+    }
 
-        // Инициализация университетов
-        _universities[0].Number = "12345";
-        _universities[0].Name = "Самарский университет";
-        _universities[0].Address = "Самара";
-        _universities[0].RectorData = _rectors[0];
-        _universities[0].UniversityProperty = _universityProperties[0];
-        _universities[0].ConstructionProperty = _constructionProperties[0];
-        _universities[0].RectorId = 0;
-
-        // Аналогично для других университетов
-        // ...
-
-        // Добавление факультетов, кафедр и узлов специальностей
-        InitializeFacultiesAndDepartments();
+    private IEnumerable<University> GetInitialUniversities()
+    {
+        return new List<University>
+        {
+            new University
+            {
+                Id = 0,
+                Number = "12345",
+                Name = "Самарский университет",
+                Address = "Самара",
+                RectorData = _rectors[0],
+                UniversityProperty = _universityProperties[0],
+                ConstructionProperty = _constructionProperties[0],
+                RectorId = 0
+            },
+            new University
+            {
+                Id = 1,
+                Number = "56789",
+                Name = "СамГТУ",
+                Address = "Самара",
+                RectorData = _rectors[1],
+                UniversityProperty = _universityProperties[0],
+                ConstructionProperty = _constructionProperties[0],
+                RectorId = 1
+            },
+            new University
+            {
+                Id = 2,
+                Number = "45678",
+                Name = "ПГУТИ",
+                Address = "Самара",
+                RectorData = _rectors[2],
+                UniversityProperty = _universityProperties[0],
+                ConstructionProperty = _constructionProperties[2],
+                RectorId = 2
+            }
+        };
     }
 
     private void InitializeFacultiesAndDepartments()
     {
-        // Пример добавления факультетов и кафедр для университетов
-        // Для первого университета
         _universities[0].FacultiesData.AddRange(new Faculty[] { _faculties[0], _faculties[1], _faculties[2] });
         _universities[0].DepartmentsData.AddRange(new Department[] { _departments[0], _departments[1] });
         _universities[0].SpecialtyTable.AddRange(new SpecialtyTableNode[] { _specialtyTableNodes[0], _specialtyTableNodes[1], _specialtyTableNodes[2] });
 
-        // Для второго университета
-        // ...
+        _universities[1].FacultiesData.AddRange(new Faculty[] { _faculties[3], _faculties[4] });
+        _universities[1].DepartmentsData.AddRange(new Department[] { _departments[2] });
+        _universities[1].SpecialtyTable.AddRange(new SpecialtyTableNode[] { _specialtyTableNodes[3], _specialtyTableNodes[4], _specialtyTableNodes[5], _specialtyTableNodes[6] });
 
-        // Для третьего университета
-        // ...
+        _universities[2].FacultiesData.AddRange(new Faculty[] { _faculties[5] });
+        _universities[2].DepartmentsData.AddRange(new Department[] { _departments[3] });
+        _universities[2].SpecialtyTable.AddRange(new SpecialtyTableNode[] { _specialtyTableNodes[7], _specialtyTableNodes[8], _specialtyTableNodes[9], _specialtyTableNodes[10] });
     }
 
     public void Add(University university)
     {
         if (university == null) throw new ArgumentNullException(nameof(university));
 
-        university.Id = _universities.Count; // Присвоение нового ID
+        university.Id = _universities.Count; 
         _universities.Add(university);
     }
 
@@ -88,7 +114,7 @@ public class UniversityRepository : IUniversityRepository
             existingUniversity.UniversityProperty = university.UniversityProperty;
             existingUniversity.ConstructionProperty = university.ConstructionProperty;
             existingUniversity.RectorId = university.RectorId;
-            // Обновление факультетов, кафедр и узлов специальностей можно добавить по необходимости
+           
         }
     }
 

@@ -13,34 +13,49 @@ public class DepartmentRepository : IDepartmentRepository
 
     private void InitializeDepartments()
     {
-        for (var i = 0; i < 4; ++i)
+        _departments.AddRange(GetInitialDepartments());
+    }
+
+    private IEnumerable<Department> GetInitialDepartments()
+    {
+        return new List<Department>
+    {
+        new Department
         {
-            _departments.Add(new Department { Id = i });
+            Id = 0,
+            Name = "ГИиБ",
+            SupervisorNumber = "890918734",
+            UniversityId = 0
+        },
+        new Department
+        {
+            Id = 1,
+            Name = "Кафедры алгебры и геометрии",
+            SupervisorNumber = "890918735",
+            UniversityId = 0
+        },
+        new Department
+        {
+            Id = 2,
+            Name = "Кафедра высшей математики",
+            SupervisorNumber = "890918736",
+            UniversityId = 1
+        },
+        new Department
+        {
+            Id = 3,
+            Name = "Кафедра информационных технологий",
+            SupervisorNumber = "890918737",
+            UniversityId = 2
         }
-
-        _departments[0].Name = "ГИиБ";
-        _departments[0].SupervisorNumber = "890918734";
-        _departments[0].UniversityId = 0;
-
-        _departments[1].Name = "Кафедры алгебры и геометрии";
-        _departments[1].SupervisorNumber = "890918735";
-        _departments[1].UniversityId = 0;
-
-        _departments[2].Name = "Кафедра высшей математики";
-        _departments[2].SupervisorNumber = "890918736";
-        _departments[2].UniversityId = 1;
-
-        _departments[3].Name = "Кафедра информационных технологий";
-        _departments[3].SupervisorNumber = "890918737";
-        _departments[3].UniversityId = 2;
+    };
     }
 
     public void Add(Department department)
     {
         if (department == null) throw new ArgumentNullException(nameof(department));
 
-        department.Id = _departments.Count; // Присвоение нового ID
-        _departments.Add(department);
+        department.Id = _departments.Count; 
     }
 
     public void Update(Department department)
