@@ -52,17 +52,16 @@ public class RectorController : ControllerBase
     public async Task<ActionResult<RectorGetDto?>> Get(int id)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-        var rector = ctx.Rectors.FirstOrDefault(rector => rector.Id == id);
+
+        var rector = await ctx.Rectors.FirstOrDefaultAsync(r => r.Id == id);
         if (rector == null)
         {
             _logger.LogInformation("Not found rector with id: {0}", id);
             return NotFound();
         }
-        else
-        {
-            _logger.LogInformation("Get rector with id {0}", id);
-            return Ok(_mapper.Map<RectorGetDto>(rector));
-        }
+
+        _logger.LogInformation("Get rector with id: {0}", id);
+        return Ok(_mapper.Map<RectorGetDto>(rector));
     }
     /// <summary>
     /// POST-запрос на добавление нового элемента в коллекцию
@@ -88,19 +87,19 @@ public class RectorController : ControllerBase
     public async Task<IActionResult> Put(int id, [FromBody] RectorPostDto rectorToPut)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-        var rector = ctx.Rectors.FirstOrDefault(rector => rector.Id == id);
+
+        var rector = await ctx.Rectors.FirstOrDefaultAsync(r => r.Id == id);
         if (rector == null)
         {
             _logger.LogInformation($"Not found rector with id: {id}");
             return NotFound();
         }
-        else
-        {
-            _mapper.Map<RectorPostDto, Rector>(rectorToPut, rector);
-            await ctx.SaveChangesAsync();
-            _logger.LogInformation("Update rector with id: {0}", id);
-            return Ok();
-        }
+
+        _mapper.Map(rectorToPut, rector);
+        await ctx.SaveChangesAsync();
+
+        _logger.LogInformation("Updated rector with id: {0}", id);
+        return Ok();
     }
     /// <summary>
     /// DELETE-запрос на удаление элемента из коллекции
@@ -111,18 +110,18 @@ public class RectorController : ControllerBase
     public async Task<IActionResult> Delete(int id)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-        var rector = ctx.Rectors.FirstOrDefault(rector => rector.Id == id);
+
+        var rector = await ctx.Rectors.FirstOrDefaultAsync(r => r.Id == id);
         if (rector == null)
         {
             _logger.LogInformation("Not found rector with id: {0}", id);
             return NotFound();
         }
-        else
-        {
-            ctx.Rectors.Remove(rector);
-            await ctx.SaveChangesAsync();
-            _logger.LogInformation("Delete rector with id: {0}", id);
-            return Ok();
-        }
+
+        ctx.Rectors.Remove(rector);
+        await ctx.SaveChangesAsync();
+
+        _logger.LogInformation("Deleted rector with id: {0}", id);
+        return Ok();
     }
 }

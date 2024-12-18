@@ -26,4 +26,7 @@ public class Specialty
     /// Записи в таблице связи
     /// </summary>
     public List<SpecialtyTableNode> SpecialtyTableNodes { get; set; }
+
+    public int CountGroups { get; set; }
+
 }

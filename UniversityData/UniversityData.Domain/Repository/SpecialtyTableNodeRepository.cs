@@ -11,13 +11,18 @@ public class SpecialtyTableNodeRepository : ISpecialtyTableNodeRepository
     public SpecialtyTableNodeRepository(List<Specialty> specialties)
     {
         _specialtyTableNodes = new List<SpecialtyTableNode>();
-        _specialties = specialties; // Инициализация специальностей
+        _specialties = specialties;
         InitializeSpecialtyTableNodes();
     }
 
     private void InitializeSpecialtyTableNodes()
     {
         _specialtyTableNodes.AddRange(GetInitialSpecialtyTableNodes());
+    }
+
+    public async Task<IEnumerable<SpecialtyTableNode>> GetTopFiveSpecialtiesAsync()
+    {
+        return await Task.FromResult(_specialtyTableNodes.OrderByDescending(s => s.CountGroups).Take(5).ToList());
     }
 
     private IEnumerable<SpecialtyTableNode> GetInitialSpecialtyTableNodes()

@@ -51,18 +51,18 @@ public class SpecialtyTableNodeController : ControllerBase
     public async Task<ActionResult<SpecialtyTableNodeGetDto?>> Get(int id)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-        var specialtyTableNode = ctx.SpecialtyTableNodes.FirstOrDefault(specialtyTableNode => specialtyTableNode.Id == id);
+
+        var specialtyTableNode = await ctx.SpecialtyTableNodes.FirstOrDefaultAsync(s => s.Id == id);
         if (specialtyTableNode == null)
         {
             _logger.LogInformation("Not found specialtyTableNode with id: {0}", id);
             return NotFound();
         }
-        else
-        {
-            _logger.LogInformation("Get specialtyTableNode with id {0}", id);
-            return Ok(_mapper.Map<SpecialtyTableNodeGetDto>(specialtyTableNode));
-        }
+
+        _logger.LogInformation("Get specialtyTableNode with id: {0}", id);
+        return Ok(_mapper.Map<SpecialtyTableNodeGetDto>(specialtyTableNode));
     }
+
     /// <summary>
     /// POST-запрос на добавление нового элемента в коллекцию
     /// </summary>
@@ -87,19 +87,20 @@ public class SpecialtyTableNodeController : ControllerBase
     public async Task<IActionResult> Put(int id, [FromBody] SpecialtyTableNodePostDto specialtyTableNodeToPut)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-        var specialtyTableNode = ctx.SpecialtyTableNodes.FirstOrDefault(specialtyTableNode => specialtyTableNode.Id == id);
+
+        var specialtyTableNode = await ctx.SpecialtyTableNodes.FirstOrDefaultAsync(s => s.Id == id);
         if (specialtyTableNode == null)
         {
             _logger.LogInformation($"Not found specialtyTableNode with id: {id}");
             return NotFound();
         }
-        else
-        {
-            _mapper.Map<SpecialtyTableNodePostDto, SpecialtyTableNode>(specialtyTableNodeToPut, specialtyTableNode);
-            await ctx.SaveChangesAsync();
-            _logger.LogInformation("Update specialtyTableNode with id: {0}", id);
-            return Ok();
-        }
+
+        // Обновление существующего объекта
+        _mapper.Map(specialtyTableNodeToPut, specialtyTableNode);
+        await ctx.SaveChangesAsync();
+
+        _logger.LogInformation("Updated specialtyTableNode with id: {0}", id);
+        return Ok();
     }
     /// <summary>
     /// DELETE-запрос на удаление элемента из коллекции
@@ -110,18 +111,19 @@ public class SpecialtyTableNodeController : ControllerBase
     public async Task<IActionResult> Delete(int id)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-        var specialtyTableNode = ctx.SpecialtyTableNodes.FirstOrDefault(specialtyTableNode => specialtyTableNode.Id == id);
+
+        var specialtyTableNode = await ctx.SpecialtyTableNodes.FirstOrDefaultAsync(s => s.Id == id);
         if (specialtyTableNode == null)
         {
             _logger.LogInformation($"Not found specialtyTableNode with id: {id}");
             return NotFound();
         }
-        else
-        {
-            ctx.SpecialtyTableNodes.Remove(specialtyTableNode);
-            await ctx.SaveChangesAsync();
-            _logger.LogInformation("Delete specialtyTableNode with id: {0}", id);
-            return Ok();
-        }
+
+        ctx.SpecialtyTableNodes.Remove(specialtyTableNode);
+        await ctx.SaveChangesAsync();
+
+        _logger.LogInformation("Deleted specialtyTableNode with id: {0}", id);
+        return Ok();
     }
+
 }

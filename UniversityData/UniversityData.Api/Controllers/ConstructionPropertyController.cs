@@ -52,17 +52,16 @@ public class ConstructionPropertyController : ControllerBase
     public async Task<ActionResult<ConstructionPropertyGetDto?>> Get(int id)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-        var constructionProperty = ctx.ConstructionProperties.FirstOrDefault(constructionProperty => constructionProperty.Id == id);
+        var constructionProperty = await ctx.ConstructionProperties.FirstOrDefaultAsync(cp => cp.Id == id);
+
         if (constructionProperty == null)
         {
             _logger.LogInformation("Not found construction property with id: {0}", id);
             return NotFound();
         }
-        else
-        {
-            _logger.LogInformation("Get construction property with id: {0}", id);
-            return Ok(_mapper.Map<ConstructionPropertyGetDto>(constructionProperty));
-        }
+
+        _logger.LogInformation("Get construction property with id: {0}", id);
+        return Ok(_mapper.Map<ConstructionPropertyGetDto>(constructionProperty));
     }
     /// <summary>
     /// POST-запрос на добавление нового элемента в коллекцию
@@ -87,19 +86,19 @@ public class ConstructionPropertyController : ControllerBase
     public async Task<IActionResult> Put(int id, [FromBody] ConstructionPropertyPostDto constructionPropertyToPut)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-        var constructionProperty = ctx.ConstructionProperties.FirstOrDefault(constructionProperty => constructionProperty.Id == id);
+
+        var constructionProperty = await ctx.ConstructionProperties.FirstOrDefaultAsync(cp => cp.Id == id);
         if (constructionProperty == null)
         {
             _logger.LogInformation("Not found construction property with id: {0}", id);
             return NotFound();
         }
-        else
-        {
-            _mapper.Map<ConstructionPropertyPostDto, ConstructionProperty>(constructionPropertyToPut, constructionProperty);
-            await ctx.SaveChangesAsync();
-            _logger.LogInformation("Update construction property with id: {0}", id);
-            return Ok();
-        }
+
+        _mapper.Map(constructionPropertyToPut, constructionProperty);
+        await ctx.SaveChangesAsync();
+
+        _logger.LogInformation("Update construction property with id: {0}", id);
+        return Ok();
     }
     /// <summary>
     /// DELETE-запрос на удаление элемента из коллекции
@@ -110,18 +109,18 @@ public class ConstructionPropertyController : ControllerBase
     public async Task<IActionResult> Delete(int id)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-        var constructionProperty = ctx.ConstructionProperties.FirstOrDefault(constructionProperty => constructionProperty.Id == id);
+
+        var constructionProperty = await ctx.ConstructionProperties.FirstOrDefaultAsync(cp => cp.Id == id);
         if (constructionProperty == null)
         {
             _logger.LogInformation("Not found construction property with id: {0}", id);
             return NotFound();
         }
-        else
-        {
-            ctx.ConstructionProperties.Remove(constructionProperty);
-            await ctx.SaveChangesAsync();
-            _logger.LogInformation("Delete construction property with id: {0}", id);
-            return Ok();
-        }
+
+        ctx.ConstructionProperties.Remove(constructionProperty);
+        await ctx.SaveChangesAsync();
+
+        _logger.LogInformation("Deleted construction property with id: {0}", id);
+        return Ok();
     }
 }

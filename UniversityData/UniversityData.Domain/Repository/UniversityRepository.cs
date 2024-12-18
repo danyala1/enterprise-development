@@ -30,6 +30,21 @@ public class UniversityRepository : IUniversityRepository
         InitializeUniversities();
     }
 
+    public async Task<University> GetByNumberAsync(string number)
+    {
+        return await Task.FromResult(_universities.FirstOrDefault(u => u.Number == number));
+    }
+
+    public async Task<IEnumerable<University>> GetUniversitiesWithMaxDepartmentsAsync()
+    {
+        var maxDepartmentCount = _universities.Max(u => u.DepartmentsData.Count);
+        return await Task.FromResult(_universities.Where(u => u.DepartmentsData.Count == maxDepartmentCount).ToList());
+    }
+
+    public async Task<IEnumerable<University>> GetUniversitiesWithPropertyAsync(int universityPropertyId)
+    {
+        return await Task.FromResult(_universities.Where(u => u.UniversityProperty.Id == universityPropertyId).ToList());
+    }
 
     private void InitializeUniversities()
     {
@@ -98,7 +113,7 @@ public class UniversityRepository : IUniversityRepository
     {
         if (university == null) throw new ArgumentNullException(nameof(university));
 
-        university.Id = _universities.Count; 
+        university.Id = _universities.Count;
         _universities.Add(university);
     }
 
@@ -114,7 +129,7 @@ public class UniversityRepository : IUniversityRepository
             existingUniversity.UniversityProperty = university.UniversityProperty;
             existingUniversity.ConstructionProperty = university.ConstructionProperty;
             existingUniversity.RectorId = university.RectorId;
-           
+
         }
     }
 

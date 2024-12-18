@@ -51,17 +51,16 @@ public class FacultyController : ControllerBase
     public async Task<ActionResult<FacultyGetDto?>> Get(int id)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-        var faculty = ctx.Faculties.FirstOrDefault(faculty => faculty.Id == id);
+
+        var faculty = await ctx.Faculties.FirstOrDefaultAsync(f => f.Id == id);
         if (faculty == null)
         {
             _logger.LogInformation("Not found faculty with id: {0}", id);
             return NotFound();
         }
-        else
-        {
-            _logger.LogInformation("Get faculty with id {0}", id);
-            return Ok(_mapper.Map<FacultyGetDto>(faculty));
-        }
+
+        _logger.LogInformation("Get faculty with id: {0}", id);
+        return Ok(_mapper.Map<FacultyGetDto>(faculty));
     }
     /// <summary>
     /// POST-запрос на добавление нового элемента в коллекцию
@@ -86,19 +85,19 @@ public class FacultyController : ControllerBase
     public async Task<IActionResult> Put(int id, [FromBody] FacultyPostDto facultyToPut)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-        var faculty = ctx.Faculties.FirstOrDefault(faculty => faculty.Id == id);
+
+        var faculty = await ctx.Faculties.FirstOrDefaultAsync(f => f.Id == id);
         if (faculty == null)
         {
             _logger.LogInformation("Not found faculty with id: {0}", id);
             return NotFound();
         }
-        else
-        {
-            _mapper.Map<FacultyPostDto, Faculty>(facultyToPut, faculty);
-            await ctx.SaveChangesAsync();
-            _logger.LogInformation("Update faculty with id: {0}", id);
-            return Ok();
-        }
+
+        _mapper.Map(facultyToPut, faculty);
+        await ctx.SaveChangesAsync();
+
+        _logger.LogInformation("Updated faculty with id: {0}", id);
+        return Ok();
     }
     /// <summary>
     /// DELETE-запрос на удаление элемента из коллекции
@@ -109,18 +108,18 @@ public class FacultyController : ControllerBase
     public async Task<IActionResult> Delete(int id)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-        var faculty = ctx.Faculties.FirstOrDefault(faculty => faculty.Id == id);
+
+        var faculty = await ctx.Faculties.FirstOrDefaultAsync(f => f.Id == id);
         if (faculty == null)
         {
             _logger.LogInformation("Not found faculty with id: {0}", id);
             return NotFound();
         }
-        else
-        {
-            ctx.Faculties.Remove(faculty);
-            await ctx.SaveChangesAsync();
-            _logger.LogInformation("Delete faculty with id: {0}", id);
-            return Ok();
-        }
+
+        ctx.Faculties.Remove(faculty);
+        await ctx.SaveChangesAsync();
+
+        _logger.LogInformation("Deleted faculty with id: {0}", id);
+        return Ok();
     }
 }

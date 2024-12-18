@@ -37,6 +37,7 @@ public interface IDepartmentRepository
 
 public interface ISpecialtyTableNodeRepository
 {
+    Task<IEnumerable<SpecialtyTableNode>> GetTopFiveSpecialtiesAsync();
     void Add(SpecialtyTableNode specialtyTableNode);
     void Update(SpecialtyTableNode specialtyTableNode);
     void Delete(int id);
@@ -46,9 +47,15 @@ public interface ISpecialtyTableNodeRepository
 
 public interface IUniversityRepository
 {
+    Task<University> GetByNumberAsync(string number);
+    Task<IEnumerable<University>> GetUniversitiesWithMaxDepartmentsAsync();
+    Task<IEnumerable<University>> GetUniversitiesWithPropertyAsync(int universityPropertyId);
+
     void Add(University university);
     void Update(University university);
     void Delete(int id);
+
     University GetById(int id);
+
     IEnumerable<University> GetAll();
 }

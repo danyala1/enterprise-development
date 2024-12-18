@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UniversityData.Api.Dto;
 using UniversityData.Domain;
+using UniversityData.Domain.Repository;
 namespace UniversityData.Api.Controllers;
 
 /// <summary>
@@ -15,19 +16,28 @@ public class AnalyticsController : ControllerBase
     /// <summary>
     /// Хранение логгера
     /// </summary>
-    private readonly ILogger<UniversityController> _logger;
+    private readonly ILogger<AnalyticsController> _logger;
+
+    private readonly IUniversityRepository _universityRepository;
     /// <summary>
     /// Хранение ContextFactory
     /// </summary>
     private readonly IDbContextFactory<UniversityDataDbContext> _contextFactory;
+
+    private readonly ISpecialtyTableNodeRepository _specialtyTableNodeRepository;
     /// <summary>
     /// Хранение маппера
     /// </summary>
     private readonly IMapper _mapper;
-    public AnalyticsController(ILogger<UniversityController> logger, IDbContextFactory<UniversityDataDbContext> contextFactory, IMapper mapper)
+    public AnalyticsController(
+            ILogger<AnalyticsController> logger,
+            IUniversityRepository universityRepository,
+            ISpecialtyTableNodeRepository specialtyTableNodeRepository,
+            IMapper mapper)
     {
         _logger = logger;
-        _contextFactory = contextFactory;
+        _universityRepository = universityRepository;
+        _specialtyTableNodeRepository = specialtyTableNodeRepository;
         _mapper = mapper;
     }
 
@@ -39,21 +49,15 @@ public class AnalyticsController : ControllerBase
     [HttpGet("information_of_university{number}")]
     public async Task<ActionResult<UniversityGetDto>> GetInformationOfUniversity(string number)
     {
-        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-        var result = await (from university in ctx.Universities
-                            where university.Number == number
-                            select _mapper.Map<University, UniversityGetDto>(university)).ToListAsync();
-        if (result.Any())
+        var university = await _universityRepository.GetByNumberAsync(number);
+        if (university == null)
         {
             _logger.LogInformation("Not found university with number: {0}", number);
             return NotFound();
         }
-        else
-        {
-            _logger.LogInformation("Get information about university");
-            return Ok(result);
-        }
 
+        _logger.LogInformation("Get information about university");
+        return Ok(_mapper.Map<UniversityGetDto>(university));
     }
     /// <summary>
     /// Запрос 2 - Вывести информацию о факультетах, кафедрах и специальностях данного вуза.
@@ -63,57 +67,54 @@ public class AnalyticsController : ControllerBase
     [HttpGet("information_of_structure_of_university{number}")]
     public async Task<ActionResult<object>> InformationOfStructure(string number)
     {
-        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-        _logger.LogInformation("Get information about university");
-        var universities = await (from university in ctx.Universities
-                                  where university.Number == number
-                                  select new
-                                  {
-                                      departments = _mapper.Map<IEnumerable<DepartmentGetDto>>(university.DepartmentsData),
-                                      faculties = _mapper.Map<IEnumerable<FacultyGetDto>>(university.FacultiesData),
-                                      specialties = _mapper.Map<IEnumerable<SpecialtyTableNodeGetDto>>(university.SpecialtyTable),
-                                  }).ToListAsync();
-        if (universities.Any())
+        var university = await _universityRepository.GetByNumberAsync(number);
+        if (university == null)
         {
             _logger.LogInformation("Not found university with number: {0}", number);
             return NotFound();
         }
-        else
+
+        var result = new
         {
-            _logger.LogInformation("Get information about structure of university");
-            return Ok(universities);
-        }
+            departments = _mapper.Map<IEnumerable<DepartmentGetDto>>(university.DepartmentsData),
+            faculties = _mapper.Map<IEnumerable<FacultyGetDto>>(university.FacultiesData),
+            specialties = _mapper.Map<IEnumerable<SpecialtyTableNodeGetDto>>(university.SpecialtyTable),
+        };
+
+        _logger.LogInformation("Get information about structure of university");
+        return Ok(result);
     }
+
     /// <summary>
     /// Запрос 3 - Вывести информацию о топ 5 популярных специальностях (с максимальным количеством групп).
     /// </summary>
     /// <returns></returns>
     [HttpGet("top_five_specialties")]
-    public async Task<IEnumerable<object>> InformationOfStructure()
+    public async Task<ActionResult<IEnumerable<object>>> InformationOfTopFiveSpecialties()
     {
-        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        var specialties = await _specialtyTableNodeRepository.GetTopFiveSpecialtiesAsync();
+
+        // Преобразование списка специальностей в нужный формат
+        var result = specialties.Select(s => new
+        {
+            Specialty = s.Specialty.Name,
+            CountGroups = s.CountGroups
+        });
+
         _logger.LogInformation("Get top five specialties");
-        return await (from specialtyNode in ctx.SpecialtyTableNodes
-                      group specialtyNode by specialtyNode.Specialty.Code into specialtyGroup
-                      orderby specialtyGroup.Count() descending
-                      select new
-                      {
-                          Specialty = specialtyGroup.Key,
-                          numRequests = specialtyGroup.Count()
-                      }).Take(5).ToListAsync();
+        return Ok(result.Take(5));
     }
     /// <summary>
     /// Запрос 4 - Вывести информацию о ВУЗах с максимальным количеством кафедр, упорядочить по названию.
     /// </summary>
     /// <returns></returns>
     [HttpGet("university_with_max_departments")]
-    public async Task<IEnumerable<UniversityGetDto>> MaxCountDepartments()
+    public async Task<ActionResult<IEnumerable<UniversityGetDto>>> MaxCountDepartments()
     {
-        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        var universities = await _universityRepository.GetUniversitiesWithMaxDepartmentsAsync();
+
         _logger.LogInformation("Get universities with max count departments");
-        return await (from university in ctx.Universities
-                      where university.DepartmentsData.Count == ctx.Universities.Max(element => element.DepartmentsData.Count)
-                      select _mapper.Map<University, UniversityGetDto>(university)).ToListAsync();
+        return Ok(_mapper.Map<IEnumerable<UniversityGetDto>>(universities));
     }
     /// <summary>
     /// Запрос 5 - Вывести информацию о ВУЗах с заданной собственностью учреждения, и количество групп в ВУЗе.
@@ -121,22 +122,23 @@ public class AnalyticsController : ControllerBase
     /// <param name="universityPropertyId"></param>
     /// <returns></returns>
     [HttpGet("university_with_target_property")]
-    public async Task<IEnumerable<object>> UniversityWithProperty(int universityPropertyId)
+    public async Task<ActionResult<IEnumerable<object>>> UniversityWithProperty(int universityPropertyId)
     {
-        await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
+        var universities = await _universityRepository.GetUniversitiesWithPropertyAsync(universityPropertyId);
+
+        var result = universities.Select(u => new
+        {
+            u.Id,
+            u.Name,
+            u.Number,
+            u.RectorId,
+            u.ConstructionProperty,
+            u.UniversityProperty,
+            CountGroups = u.SpecialtyTable.Sum(s => s.CountGroups)
+        });
+
         _logger.LogInformation("Get information about universities with target property");
-        return await (from university in ctx.Universities
-                      where (university.UniversityProperty.Id == universityPropertyId)
-                      select new
-                      {
-                          university.Id,
-                          university.Name,
-                          university.Number,
-                          university.RectorId,
-                          university.ConstructionProperty,
-                          university.UniversityProperty,
-                          count = university.SpecialtyTable.Sum(specialtyNode => specialtyNode.CountGroups)
-                      }).ToListAsync();
+        return Ok(result);
     }
     /// <summary>
     /// Запрос 6 - Вывести информацию о количестве факультетов, кафедр, специальностей по каждому типу собственности учреждения и собственности здания.
