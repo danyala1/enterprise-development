@@ -16,17 +16,17 @@ public class University
     /// Регистрационный номер
     /// </summary>
     [Column("number")]
-    public string Number { get; set; }
+    public required string Number { get; set; }
     /// <summary>
     /// Название университета
     /// </summary>
     [Column("name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
     /// <summary>
     /// Адрес университета
     /// </summary>
     [Column("address")]
-    public string Address { get; set; }
+    public required string Address { get; set; }
     /// <summary>
     /// ID ректора
     /// </summary>
@@ -45,15 +45,15 @@ public class University
     /// <summary>
     /// Сведения о ректоре 
     /// </summary>
-    public Rector RectorData { get; set; }
+    public Rector? RectorData { get; set; }
     /// <summary>
     /// Собственность учреждения
     /// </summary>
-    public UniversityProperty UniversityProperty { get; set; }
+    public UniversityProperty? UniversityProperty { get; set; }
     /// <summary>
     /// Собственность здания университета
     /// </summary>
-    public ConstructionProperty ConstructionProperty { get; set; }
+    public ConstructionProperty? ConstructionProperty { get; set; }
     /// <summary>
     /// Факультеты университета
     /// </summary>

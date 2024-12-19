@@ -1,110 +1,76 @@
 ﻿using UniversityData.Domain.Repository;
 using UniversityData.Domain;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class FacultyRepository : IFacultyRepository
 {
-    private readonly List<Faculty> _faculties;
+    private readonly UniversityDataDbContext _dbContext;
+    private readonly DbSet<Faculty> _faculties;
 
-    public FacultyRepository()
+    public FacultyRepository(UniversityDataDbContext dbContext)
     {
-        _faculties = new List<Faculty>();
-        InitializeFaculties();
+        _dbContext = dbContext;
+        _faculties = _dbContext.Faculties;
     }
 
-    private void InitializeFaculties()
-    {
-        _faculties.AddRange(GetInitialFaculties());
-    }
-
-    private IEnumerable<Faculty> GetInitialFaculties()
-    {
-        return new List<Faculty>
-    {
-        new Faculty
-        {
-            Id = 0,
-            Name = "Институт информатики и кибернетики",
-            WorkersCount = 16,
-            StudentsCount = 110,
-            UniversityId = 0
-        },
-        new Faculty
-        {
-            Id = 1,
-            Name = "Институт экономики и управления",
-            WorkersCount = 22,
-            StudentsCount = 81,
-            UniversityId = 0
-        },
-        new Faculty
-        {
-            Id = 2,
-            Name = "Юридический институт",
-            WorkersCount = 11,
-            StudentsCount = 65,
-            UniversityId = 0
-        },
-        new Faculty
-        {
-            Id = 3,
-            Name = "Социально-гуманитарный институт",
-            WorkersCount = 30,
-            StudentsCount = 200,
-            UniversityId = 1
-        },
-        new Faculty
-        {
-            Id = 4,
-            Name = "Институт доп. образования",
-            WorkersCount = 22,
-            StudentsCount = 62,
-            UniversityId = 1
-        },
-        new Faculty
-        {
-            Id = 5,
-            Name = "Институт двигателей и энергетических установок",
-            WorkersCount = 16,
-            StudentsCount = 70,
-            UniversityId = 2
-        }
-    };
-    }
-
-    public void Add(Faculty faculty)
+    /// <summary>
+    /// Добавить новый факультет.
+    /// </summary>
+    public async Task AddAsync(Faculty faculty)
     {
         if (faculty == null) throw new ArgumentNullException(nameof(faculty));
 
-        faculty.Id = _faculties.Count;
-        _faculties.Add(faculty);
+        await _faculties.AddAsync(faculty);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public void Update(Faculty faculty)
+    /// <summary>
+    /// Обновить существующий факультет.
+    /// </summary>
+    public async Task UpdateAsync(Faculty faculty)
     {
-        var existingFaculty = GetById(faculty.Id);
+        if (faculty == null) throw new ArgumentNullException(nameof(faculty));
+
+        var existingFaculty = await GetByIdAsync(faculty.Id);
         if (existingFaculty != null)
         {
             existingFaculty.Name = faculty.Name;
             existingFaculty.WorkersCount = faculty.WorkersCount;
             existingFaculty.StudentsCount = faculty.StudentsCount;
             existingFaculty.UniversityId = faculty.UniversityId;
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 
-    public void Delete(int id)
+    /// <summary>
+    /// Удалить факультет по идентификатору.
+    /// </summary>
+    public async Task DeleteAsync(int id)
     {
-        var facultyToRemove = GetById(id);
+        var facultyToRemove = await GetByIdAsync(id);
         if (facultyToRemove != null)
+        {
             _faculties.Remove(facultyToRemove);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 
-    public Faculty GetById(int id)
+    /// <summary>
+    /// Получить факультет по идентификатору.
+    /// </summary>
+    public async Task<Faculty?> GetByIdAsync(int id)
     {
-        return _faculties.FirstOrDefault(f => f.Id == id);
+        return await _faculties.FindAsync(id);
     }
 
-    public IEnumerable<Faculty> GetAll()
+    /// <summary>
+    /// Получить всех факультетов.
+    /// </summary>
+    public async Task<IEnumerable<Faculty>> GetAllAsync()
     {
-        return new List<Faculty>(_faculties);
+        return await _faculties.ToListAsync();
     }
 }

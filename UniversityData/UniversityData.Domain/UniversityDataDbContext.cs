@@ -43,6 +43,7 @@ public class UniversityDataDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<University>()
                  .HasOne<Rector>()
                  .WithMany()

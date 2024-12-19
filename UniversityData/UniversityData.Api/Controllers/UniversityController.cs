@@ -24,6 +24,13 @@ public class UniversityController : ControllerBase
     /// Хранение маппера
     /// </summary>
     private readonly IMapper _mapper;
+
+    /// <summary>
+    /// Инициализирует новый экземпляр класса <see cref="UniversityController"/>.
+    /// </summary>
+    /// <param name="logger">Логгер для записи информации и ошибок.</param>
+    /// <param name="contextFactory">Фабрика контекста базы данных для создания экземпляров <see cref="UniversityDataDbContext"/>.</param>
+    /// <param name="mapper">Объект для преобразования между объектами модели и DTO.</param>
     public UniversityController(ILogger<UniversityController> logger, IDbContextFactory<UniversityDataDbContext> contextFactory, IMapper mapper)
     {
         _logger = logger;
@@ -51,16 +58,17 @@ public class UniversityController : ControllerBase
     public async Task<ActionResult<UniversityGetDto?>> Get(int id)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-
-        var university = await ctx.Universities.FirstOrDefaultAsync(u => u.Id == id);
+        var university = ctx.Universities.FirstOrDefault(university => university.Id == id);
         if (university == null)
         {
             _logger.LogInformation("Not found university with id: {0}", id);
             return NotFound();
         }
-
-        _logger.LogInformation("Get university with id: {0}", id);
-        return Ok(_mapper.Map<UniversityGetDto>(university));
+        else
+        {
+            _logger.LogInformation("Get university with id {0}", id);
+            return Ok(_mapper.Map<UniversityGetDto>(university));
+        }
     }
     /// <summary>
     /// POST-запрос на добавление нового элемента в коллекцию
@@ -85,19 +93,19 @@ public class UniversityController : ControllerBase
     public async Task<IActionResult> Put(int id, [FromBody] UniversityPostDto universityToPut)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-
-        var university = await ctx.Universities.FirstOrDefaultAsync(u => u.Id == id);
+        var university = ctx.Universities.FirstOrDefault(university => university.Id == id);
         if (university == null)
         {
             _logger.LogInformation("Not found university with id: {0}", id);
             return NotFound();
         }
-
-        _mapper.Map(universityToPut, university);
-        await ctx.SaveChangesAsync();
-
-        _logger.LogInformation("Updated university with id: {0}", id);
-        return Ok();
+        else
+        {
+            _mapper.Map<UniversityPostDto, University>(universityToPut, university);
+            await ctx.SaveChangesAsync();
+            _logger.LogInformation("Update university with id: {0}", id);
+            return Ok();
+        }
     }
     /// <summary>
     /// DELETE-запрос на удаление элемента из коллекции
@@ -108,18 +116,18 @@ public class UniversityController : ControllerBase
     public async Task<IActionResult> Delete(int id)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-
-        var university = await ctx.Universities.FirstOrDefaultAsync(u => u.Id == id);
+        var university = ctx.Universities.FirstOrDefault(university => university.Id == id);
         if (university == null)
         {
             _logger.LogInformation("Not found university with id: {0}", id);
             return NotFound();
         }
-
-        ctx.Universities.Remove(university);
-        await ctx.SaveChangesAsync();
-
-        _logger.LogInformation("Deleted university with id: {0}", id);
-        return Ok();
+        else
+        {
+            ctx.Universities.Remove(university);
+            await ctx.SaveChangesAsync();
+            _logger.LogInformation("Delete university with id: {0}", id);
+            return Ok();
+        }
     }
 }

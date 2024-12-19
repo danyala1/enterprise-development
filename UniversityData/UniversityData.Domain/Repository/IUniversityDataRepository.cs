@@ -1,61 +1,66 @@
-﻿namespace UniversityData.Domain.Repository;
+﻿
+namespace UniversityData.Domain.Repository;
 public interface IFacultyRepository
 {
-    void Add(Faculty faculty);
-    void Update(Faculty faculty);
-    void Delete(int id);
-    Faculty GetById(int id);
-    IEnumerable<Faculty> GetAll();
+    Task AddAsync(Faculty faculty);
+    Task UpdateAsync(Faculty faculty);
+    Task DeleteAsync(int id);
+    Task<Faculty?> GetByIdAsync(int id);
+    Task<IEnumerable<Faculty>> GetAllAsync();
 }
 
 public interface IRectorRepository
 {
-    void Add(Rector rector);
-    void Update(Rector rector);
-    void Delete(int id);
-    Rector GetById(int id);
-    IEnumerable<Rector> GetAll();
+    Task AddAsync(Rector rector);
+    Task UpdateAsync(Rector rector);
+    Task DeleteAsync(int id);
+    Task<Rector?> GetByIdAsync(int id);
+    Task<IEnumerable<Rector>> GetAllAsync();
 }
 
 public interface ISpecialtyRepository
 {
-    void Add(Specialty specialty);
-    void Update(Specialty specialty);
-    void Delete(int id);
-    Specialty GetById(int id);
-    IEnumerable<Specialty> GetAll();
+    Task AddAsync(Specialty specialty);
+    Task UpdateAsync(Specialty specialty);
+    Task DeleteAsync(int id);
+    Task<Specialty?> GetByIdAsync(int id);
+    Task<IEnumerable<Specialty>> GetAllAsync();
+    Task<IEnumerable<Specialty>> GetTopFiveSpecialtiesAsync();
 }
 
 public interface IDepartmentRepository
 {
-    void Add(Department department);
-    void Update(Department department);
-    void Delete(int id);
-    Department GetById(int id);
-    IEnumerable<Department> GetAll();
+    Task AddAsync(Department department);
+    Task UpdateAsync(Department department);
+    Task DeleteAsync(int id);
+    Task<Department?> GetByIdAsync(int id);
+    Task<IEnumerable<Department>> GetAllAsync();
 }
 
 public interface ISpecialtyTableNodeRepository
 {
     Task<IEnumerable<SpecialtyTableNode>> GetTopFiveSpecialtiesAsync();
-    void Add(SpecialtyTableNode specialtyTableNode);
-    void Update(SpecialtyTableNode specialtyTableNode);
-    void Delete(int id);
-    SpecialtyTableNode GetById(int id);
-    IEnumerable<SpecialtyTableNode> GetAll();
+    Task AddAsync(SpecialtyTableNode specialtyTableNode);
+    Task UpdateAsync(SpecialtyTableNode specialtyTableNode);
+    Task DeleteAsync(int id);
+    Task<SpecialtyTableNode?> GetByIdAsync(int id);
+    Task<IEnumerable<SpecialtyTableNode>> GetAllAsync();
 }
 
 public interface IUniversityRepository
 {
-    Task<University> GetByNumberAsync(string number);
+    Task<int> GetMaxDepartmentCountAsync();
+    Task<List<University>> GetUniversitiesByPropertyIdAsync(int universityPropertyId);
+    Task<IEnumerable<University>> GetUniversitiesByDepartmentCountAsync(); //добавить параметры
+
+
+    Task<University?> GetByNumberAsync(string number);
     Task<IEnumerable<University>> GetUniversitiesWithMaxDepartmentsAsync();
     Task<IEnumerable<University>> GetUniversitiesWithPropertyAsync(int universityPropertyId);
+    Task AddAsync(University university);
+    Task UpdateAsync(University university);
+    Task DeleteAsync(int id);
+    Task<University?> GetByIdAsync(int id);
+    Task<IEnumerable<University?>> GetAllAsync();
 
-    void Add(University university);
-    void Update(University university);
-    void Delete(int id);
-
-    University GetById(int id);
-
-    IEnumerable<University> GetAll();
 }

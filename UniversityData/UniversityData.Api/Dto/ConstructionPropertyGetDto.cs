@@ -11,5 +11,5 @@ public class ConstructionPropertyGetDto
     /// <summary>
     /// Название собственности зданий университета
     /// </summary>
-    public string NameConstructionProperty { get; set; }
+    public required string NameConstructionProperty { get; set; }
 }

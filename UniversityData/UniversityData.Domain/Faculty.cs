@@ -16,7 +16,7 @@ public class Faculty
     /// Название факультета
     /// </summary>
     [Column("name")]
-    public string? Name { get; set; }
+    public required string Name { get; set; }
     /// <summary>
     /// Количество сотрудников факультета
     /// </summary>

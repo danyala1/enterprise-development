@@ -1,69 +1,40 @@
 ﻿using UniversityData.Domain.Repository;
 using UniversityData.Domain;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 public class RectorRepository : IRectorRepository
 {
-    private readonly List<Rector> _rectors;
+    private readonly UniversityDataDbContext _dbContext;
+    private readonly DbSet<Rector> _rectors;
 
-    public RectorRepository()
+    public RectorRepository(UniversityDataDbContext dbContext)
     {
-        _rectors = new List<Rector>();
-        InitializeRectors();
+        _dbContext = dbContext;
+        _rectors = _dbContext.Rectors;
     }
 
-    private void InitializeRectors()
-    {
-        _rectors.AddRange(GetInitialRectors());
-    }
-
-    private IEnumerable<Rector> GetInitialRectors()
-    {
-        return new List<Rector>
-    {
-        new Rector
-        {
-            Id = 0,
-            Name = "Владимир",
-            Surname = "Богатырев",
-            Patronymic = "Дмитриевич",
-            Degree = "Доктор экономических наук",
-            Title = "Профессор",
-            Position = "Ректор"
-        },
-        new Rector
-        {
-            Id = 1,
-            Name = "Дмитрий",
-            Surname = "Быков",
-            Patronymic = "Евгеньевич",
-            Degree = "Доктор технических наук",
-            Title = "Профессор",
-            Position = "Ректор"
-        },
-        new Rector
-        {
-            Id = 2,
-            Name = "Вадим",
-            Surname = "Ружников",
-            Patronymic = "Александрович",
-            Degree = "Кандидат технических наук",
-            Title = "Доцент",
-            Position = "Ректор"
-        }
-    };
-    }
-
-    public void Add(Rector rector)
+    /// <summary>
+    /// Добавить нового ректора.
+    /// </summary>
+    public async Task AddAsync(Rector rector)
     {
         if (rector == null) throw new ArgumentNullException(nameof(rector));
 
-        rector.Id = _rectors.Count; 
-        _rectors.Add(rector);
+        await _rectors.AddAsync(rector);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public void Update(Rector rector)
+    /// <summary>
+    /// Обновить существующего ректора.
+    /// </summary>
+    public async Task UpdateAsync(Rector rector)
     {
-        var existingRector = GetById(rector.Id);
+        if (rector == null) throw new ArgumentNullException(nameof(rector));
+
+        var existingRector = await GetByIdAsync(rector.Id);
         if (existingRector != null)
         {
             existingRector.Name = rector.Name;
@@ -72,23 +43,37 @@ public class RectorRepository : IRectorRepository
             existingRector.Degree = rector.Degree;
             existingRector.Title = rector.Title;
             existingRector.Position = rector.Position;
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 
-    public void Delete(int id)
+    /// <summary>
+    /// Удалить ректора по идентификатору.
+    /// </summary>
+    public async Task DeleteAsync(int id)
     {
-        var rectorToRemove = GetById(id);
+        var rectorToRemove = await GetByIdAsync(id);
         if (rectorToRemove != null)
+        {
             _rectors.Remove(rectorToRemove);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 
-    public Rector GetById(int id)
+    /// <summary>
+    /// Получить ректора по идентификатору.
+    /// </summary>
+    public async Task<Rector?> GetByIdAsync(int id)
     {
-        return _rectors.FirstOrDefault(r => r.Id == id);
+        return await _rectors.FindAsync(id);
     }
 
-    public IEnumerable<Rector> GetAll()
+    /// <summary>
+    /// Получить всех ректоров.
+    /// </summary>
+    public async Task<IEnumerable<Rector>> GetAllAsync()
     {
-        return new List<Rector>(_rectors);
+        return await _rectors.ToListAsync();
     }
 }

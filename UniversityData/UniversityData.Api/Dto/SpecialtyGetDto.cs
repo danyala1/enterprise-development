@@ -11,12 +11,9 @@ public class SpecialtyGetDto
     /// <summary>
     /// Название специальности
     /// </summary>
-    public string Name { get; set; }
+    public required string Name { get; set; }
     /// <summary>
     /// Код-шифр специальности 
     /// </summary>
-    public string Code { get; set; }
-    /// <summary>
-    /// Записи в таблице связи
-    /// </summary>
+    public required string Code { get; set; }
 }

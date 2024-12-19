@@ -16,16 +16,16 @@ public class Specialty
     /// Название специальности
     /// </summary>
     [Column("name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
     /// <summary>
     /// Код-шифр специальности 
     /// </summary>
     [Column("code")]
-    public string Code { get; set; }
+    public required string Code { get; set; }
     /// <summary>
     /// Записи в таблице связи
     /// </summary>
-    public List<SpecialtyTableNode> SpecialtyTableNodes { get; set; }
+    public List<SpecialtyTableNode>? SpecialtyTableNodes { get; set; }
 
     public int CountGroups { get; set; }
 

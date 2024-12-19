@@ -24,6 +24,14 @@ public class RectorController : ControllerBase
     /// Хранение маппера
     /// </summary>
     private readonly IMapper _mapper;
+
+    /// <summary>
+    /// Инициализирует новый экземпляр класса <see cref="RectorController"/>.
+    /// </summary>
+    /// <param name="logger">Логгер для записи информации и ошибок.</param>
+    /// <param name="contextFactory">Фабрика контекста базы данных для создания экземпляров <see cref="UniversityDataDbContext"/>.</param>
+    /// <param name="mapper">Объект для преобразования между объектами модели и DTO.</param>
+
     public RectorController(ILogger<RectorController> logger, IDbContextFactory<UniversityDataDbContext> contextFactory, IMapper mapper)
     {
         _logger = logger;
@@ -52,16 +60,17 @@ public class RectorController : ControllerBase
     public async Task<ActionResult<RectorGetDto?>> Get(int id)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-
-        var rector = await ctx.Rectors.FirstOrDefaultAsync(r => r.Id == id);
+        var rector = ctx.Rectors.FirstOrDefault(rector => rector.Id == id);
         if (rector == null)
         {
             _logger.LogInformation("Not found rector with id: {0}", id);
             return NotFound();
         }
-
-        _logger.LogInformation("Get rector with id: {0}", id);
-        return Ok(_mapper.Map<RectorGetDto>(rector));
+        else
+        {
+            _logger.LogInformation("Get rector with id {0}", id);
+            return Ok(_mapper.Map<RectorGetDto>(rector));
+        }
     }
     /// <summary>
     /// POST-запрос на добавление нового элемента в коллекцию
@@ -87,19 +96,19 @@ public class RectorController : ControllerBase
     public async Task<IActionResult> Put(int id, [FromBody] RectorPostDto rectorToPut)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-
-        var rector = await ctx.Rectors.FirstOrDefaultAsync(r => r.Id == id);
+        var rector = ctx.Rectors.FirstOrDefault(rector => rector.Id == id);
         if (rector == null)
         {
             _logger.LogInformation($"Not found rector with id: {id}");
             return NotFound();
         }
-
-        _mapper.Map(rectorToPut, rector);
-        await ctx.SaveChangesAsync();
-
-        _logger.LogInformation("Updated rector with id: {0}", id);
-        return Ok();
+        else
+        {
+            _mapper.Map<RectorPostDto, Rector>(rectorToPut, rector);
+            await ctx.SaveChangesAsync();
+            _logger.LogInformation("Update rector with id: {0}", id);
+            return Ok();
+        }
     }
     /// <summary>
     /// DELETE-запрос на удаление элемента из коллекции
@@ -110,18 +119,18 @@ public class RectorController : ControllerBase
     public async Task<IActionResult> Delete(int id)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-
-        var rector = await ctx.Rectors.FirstOrDefaultAsync(r => r.Id == id);
+        var rector = ctx.Rectors.FirstOrDefault(rector => rector.Id == id);
         if (rector == null)
         {
             _logger.LogInformation("Not found rector with id: {0}", id);
             return NotFound();
         }
-
-        ctx.Rectors.Remove(rector);
-        await ctx.SaveChangesAsync();
-
-        _logger.LogInformation("Deleted rector with id: {0}", id);
-        return Ok();
+        else
+        {
+            ctx.Rectors.Remove(rector);
+            await ctx.SaveChangesAsync();
+            _logger.LogInformation("Delete rector with id: {0}", id);
+            return Ok();
+        }
     }
 }

@@ -7,11 +7,11 @@ public class DepartmentPostDto
     /// <summary>
     /// Название кафедры
     /// </summary>
-    public string Name { get; set; }
+    public required string Name { get; set; }
     /// <summary>
     /// Контактный телефон заведущего кафедрой
     /// </summary>
-    public string SupervisorNumber { get; set; }
+    public required string SupervisorNumber { get; set; }
     /// <summary>
     /// ID университета
     /// </summary>

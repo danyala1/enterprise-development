@@ -16,12 +16,12 @@ public class Department
     /// Название кафедры
     /// </summary>
     [Column("name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
     /// <summary>
     /// Контактный телефон заведущего кафедрой
     /// </summary>
     [Column("supervisor_number")]
-    public string SupervisorNumber { get; set; }
+    public required string SupervisorNumber { get; set; }
     /// <summary>
     /// ID университета
     /// </summary>

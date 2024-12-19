@@ -1,65 +1,87 @@
 ﻿using UniversityData.Domain.Repository;
 using UniversityData.Domain;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 public class SpecialtyRepository : ISpecialtyRepository
 {
-    private readonly List<Specialty> _specialties;
+    private readonly UniversityDataDbContext _dbContext;
+    private readonly DbSet<Specialty> _specialtySet;
 
-    public SpecialtyRepository()
+    public SpecialtyRepository(UniversityDataDbContext dbContext)
     {
-        _specialties = new List<Specialty>();
-        InitializeSpecialties();
+        _dbContext = dbContext;
+        _specialtySet = _dbContext.Specialties;
     }
 
-    private void InitializeSpecialties()
-    {
-        _specialties.AddRange(GetInitialSpecialties());
-    }
-
-    private IEnumerable<Specialty> GetInitialSpecialties()
-    {
-        return new List<Specialty>
-        {
-            new Specialty { Id = 0, Name = "Прикладная информатика", Code = "09.03.03" },
-            new Specialty { Id = 1, Name = "Информационные системы и технологии", Code = "09.03.02" },
-            new Specialty { Id = 2, Name = "Информатика и вычислительная техника", Code = "09.03.01" },
-            new Specialty { Id = 3, Name = "Прикладная математика и информатика", Code = "01.03.02" },
-            new Specialty { Id = 4, Name = "Информационная безопасность автоматизированных систем", Code = "10.05.03" }
-        };
-    }
-
-    public void Add(Specialty specialty)
+    /// <summary>
+    /// Добавить новую специальность.
+    /// </summary>
+    public async Task AddAsync(Specialty specialty)
     {
         if (specialty == null) throw new ArgumentNullException(nameof(specialty));
 
-        specialty.Id = _specialties.Count; 
-        _specialties.Add(specialty);
+        await _specialtySet.AddAsync(specialty);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public void Update(Specialty specialty)
+    /// <summary>
+    /// Обновить существующую специальность.
+    /// </summary>
+    public async Task UpdateAsync(Specialty specialty)
     {
-        var existingSpecialty = GetById(specialty.Id);
+        if (specialty == null) throw new ArgumentNullException(nameof(specialty));
+
+        var existingSpecialty = await GetByIdAsync(specialty.Id);
         if (existingSpecialty != null)
         {
             existingSpecialty.Name = specialty.Name;
             existingSpecialty.Code = specialty.Code;
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 
-    public void Delete(int id)
+    /// <summary>
+    /// Удалить специальность по идентификатору.
+    /// </summary>
+    public async Task DeleteAsync(int id)
     {
-        var specialtyToRemove = GetById(id);
+        var specialtyToRemove = await GetByIdAsync(id);
         if (specialtyToRemove != null)
-            _specialties.Remove(specialtyToRemove);
+        {
+            _specialtySet.Remove(specialtyToRemove);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 
-    public Specialty GetById(int id)
+    /// <summary>
+    /// Получить специальность по идентификатору.
+    /// </summary>
+    public async Task<Specialty?> GetByIdAsync(int id)
     {
-        return _specialties.FirstOrDefault(s => s.Id == id);
+        return await _specialtySet.FindAsync(id);
     }
 
-    public IEnumerable<Specialty> GetAll()
+    /// <summary>
+    /// Получить все специальности.
+    /// </summary>
+    public async Task<IEnumerable<Specialty>> GetAllAsync()
     {
-        return new List<Specialty>(_specialties);
+        return await _specialtySet.ToListAsync();
     }
+
+    /// <summary>
+    /// Получить топ-5 популярных специальностей по количеству групп.
+    /// </summary>
+    public async Task<IEnumerable<Specialty>> GetTopFiveSpecialtiesAsync()
+    {
+        return await _dbContext.Specialties
+            .OrderByDescending(s => s.CountGroups)
+            .Take(5)
+            .ToListAsync();
+    }
+
 }

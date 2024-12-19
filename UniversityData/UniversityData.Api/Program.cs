@@ -11,19 +11,20 @@ var mapper = mapperConfig.CreateMapper();
 
 builder.Services.AddDbContextFactory<UniversityDataDbContext>(options =>
     options.UseMySql(
-        builder.Configuration.GetConnectionString("UniversityData")!,
-        new MySqlServerVersion(new Version(8, 0, 39))
+        builder.Configuration.GetConnectionString("DefaultConnection")!,
+        new MySqlServerVersion(new Version(8, 0, 39)),
+        b => b.MigrationsAssembly("UniversityData.Domain") // Specify the migrations assembly here
     )
 );
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddSingleton(mapper);
-builder.Services.AddSingleton<IRectorRepository, RectorRepository>();
-builder.Services.AddSingleton<IFacultyRepository, FacultyRepository>();
-builder.Services.AddSingleton<ISpecialtyRepository, SpecialtyRepository>();
-builder.Services.AddSingleton<IDepartmentRepository, DepartmentRepository>();
-builder.Services.AddSingleton<ISpecialtyTableNodeRepository, SpecialtyTableNodeRepository>();
-builder.Services.AddSingleton<IUniversityRepository, UniversityRepository>();
+builder.Services.AddScoped<IRectorRepository, RectorRepository>();
+builder.Services.AddScoped<IFacultyRepository, FacultyRepository>();
+builder.Services.AddScoped<ISpecialtyRepository, SpecialtyRepository>();
+builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+builder.Services.AddScoped<ISpecialtyTableNodeRepository, SpecialtyTableNodeRepository>();
+builder.Services.AddScoped<IUniversityRepository, UniversityRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

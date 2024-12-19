@@ -7,5 +7,5 @@ public class UniversityPropertyPostDto
     /// <summary>
     /// Название собственности университета
     /// </summary>
-    public string NameUniversityProperty { get; set; }
+    public required string NameUniversityProperty { get; set; }
 }

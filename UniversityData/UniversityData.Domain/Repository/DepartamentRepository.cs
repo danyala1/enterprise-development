@@ -1,88 +1,75 @@
 ﻿using UniversityData.Domain.Repository;
 using UniversityData.Domain;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class DepartmentRepository : IDepartmentRepository
 {
-    private readonly List<Department> _departments;
+    private readonly UniversityDataDbContext _dbContext;
+    private readonly DbSet<Department> _departments;
 
-    public DepartmentRepository()
+    public DepartmentRepository(UniversityDataDbContext dbContext)
     {
-        _departments = new List<Department>();
-        InitializeDepartments();
+        _dbContext = dbContext;
+        _departments = _dbContext.Departments;
     }
 
-    private void InitializeDepartments()
-    {
-        _departments.AddRange(GetInitialDepartments());
-    }
-
-    private IEnumerable<Department> GetInitialDepartments()
-    {
-        return new List<Department>
-    {
-        new Department
-        {
-            Id = 0,
-            Name = "ГИиБ",
-            SupervisorNumber = "890918734",
-            UniversityId = 0
-        },
-        new Department
-        {
-            Id = 1,
-            Name = "Кафедры алгебры и геометрии",
-            SupervisorNumber = "890918735",
-            UniversityId = 0
-        },
-        new Department
-        {
-            Id = 2,
-            Name = "Кафедра высшей математики",
-            SupervisorNumber = "890918736",
-            UniversityId = 1
-        },
-        new Department
-        {
-            Id = 3,
-            Name = "Кафедра информационных технологий",
-            SupervisorNumber = "890918737",
-            UniversityId = 2
-        }
-    };
-    }
-
-    public void Add(Department department)
+    /// <summary>
+    /// Добавить новый отдел.
+    /// </summary>
+    public async Task AddAsync(Department department)
     {
         if (department == null) throw new ArgumentNullException(nameof(department));
 
-        department.Id = _departments.Count; 
+        await _departments.AddAsync(department);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public void Update(Department department)
+    /// <summary>
+    /// Обновить существующий отдел.
+    /// </summary>
+    public async Task UpdateAsync(Department department)
     {
-        var existingDepartment = GetById(department.Id);
+        if (department == null) throw new ArgumentNullException(nameof(department));
+
+        var existingDepartment = await GetByIdAsync(department.Id);
         if (existingDepartment != null)
         {
             existingDepartment.Name = department.Name;
             existingDepartment.SupervisorNumber = department.SupervisorNumber;
             existingDepartment.UniversityId = department.UniversityId;
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 
-    public void Delete(int id)
+    /// <summary>
+    /// Удалить отдел по идентификатору.
+    /// </summary>
+    public async Task DeleteAsync(int id)
     {
-        var departmentToRemove = GetById(id);
+        var departmentToRemove = await GetByIdAsync(id);
         if (departmentToRemove != null)
+        {
             _departments.Remove(departmentToRemove);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 
-    public Department GetById(int id)
+    /// <summary>
+    /// Получить отдел по идентификатору.
+    /// </summary>
+    public async Task<Department?> GetByIdAsync(int id)
     {
-        return _departments.FirstOrDefault(d => d.Id == id);
+        return await _departments.FindAsync(id);
     }
 
-    public IEnumerable<Department> GetAll()
+    /// <summary>
+    /// Получить всех сотрудников.
+    /// </summary>
+    public async Task<IEnumerable<Department>> GetAllAsync()
     {
-        return new List<Department>(_departments);
+        return await _departments.ToListAsync();
     }
 }

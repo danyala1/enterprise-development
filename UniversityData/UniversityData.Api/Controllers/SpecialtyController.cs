@@ -24,6 +24,13 @@ public class SpecialtyController : ControllerBase
     /// Хранение маппера
     /// </summary>
     private readonly IMapper _mapper;
+
+    /// <summary>
+    /// Инициализирует новый экземпляр класса <see cref="SpecialtyController"/>.
+    /// </summary>
+    /// <param name="logger">Логгер для записи информации и ошибок.</param>
+    /// <param name="contextFactory">Фабрика контекста базы данных для создания экземпляров <see cref="UniversityDataDbContext"/>.</param>
+    /// <param name="mapper">Объект для преобразования между объектами модели и DTO.</param>
     public SpecialtyController(ILogger<SpecialtyController> logger, IDbContextFactory<UniversityDataDbContext> contextFactory, IMapper mapper)
     {
         _logger = logger;
@@ -52,16 +59,17 @@ public class SpecialtyController : ControllerBase
     public async Task<ActionResult<SpecialtyGetDto?>> Get(int id)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-
-        var specialty = await ctx.Specialties.FirstOrDefaultAsync(s => s.Id == id);
+        var specialty = ctx.Specialties.FirstOrDefault(specialty => specialty.Id == id);
         if (specialty == null)
         {
             _logger.LogInformation("Not found specialty with id: {0}", id);
             return NotFound();
         }
-
-        _logger.LogInformation("Get specialty with id: {0}", id);
-        return Ok(_mapper.Map<SpecialtyGetDto>(specialty));
+        else
+        {
+            _logger.LogInformation("Get specialty with id {0}", id);
+            return Ok(_mapper.Map<SpecialtyGetDto>(specialty));
+        }
     }
     /// <summary>
     /// POST-запрос на добавление нового элемента в коллекцию
@@ -87,19 +95,19 @@ public class SpecialtyController : ControllerBase
     public async Task<IActionResult> Put(int id, [FromBody] SpecialtyPostDto specialtyToPut)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-
-        var specialty = await ctx.Specialties.FirstOrDefaultAsync(s => s.Id == id);
+        var specialty = ctx.Specialties.FirstOrDefault(specialty => specialty.Id == id);
         if (specialty == null)
         {
             _logger.LogInformation($"Not found specialty with id: {id}");
             return NotFound();
         }
-
-        _mapper.Map(specialtyToPut, specialty);
-        await ctx.SaveChangesAsync();
-
-        _logger.LogInformation("Updated specialty with id: {0}", id);
-        return Ok();
+        else
+        {
+            _mapper.Map<SpecialtyPostDto, Specialty>(specialtyToPut, specialty);
+            await ctx.SaveChangesAsync();
+            _logger.LogInformation("Update specialty with id: {0}", id);
+            return Ok();
+        }
     }
     /// <summary>
     /// DELETE-запрос на удаление элемента из коллекции
@@ -110,19 +118,18 @@ public class SpecialtyController : ControllerBase
     public async Task<IActionResult> Delete(int id)
     {
         await using UniversityDataDbContext ctx = await _contextFactory.CreateDbContextAsync();
-
-        var specialty = await ctx.Specialties.FirstOrDefaultAsync(s => s.Id == id);
+        var specialty = ctx.Specialties.FirstOrDefault(specialty => specialty.Id == id);
         if (specialty == null)
         {
             _logger.LogInformation($"Not found specialty with id: {id}");
             return NotFound();
         }
-
-        ctx.Specialties.Remove(specialty);
-        await ctx.SaveChangesAsync();
-
-        _logger.LogInformation("Deleted specialty with id: {0}", id);
-        return Ok();
+        else
+        {
+            ctx.Specialties.Remove(specialty);
+            await ctx.SaveChangesAsync();
+            _logger.LogInformation("Delete specialty with id: {0}", id);
+            return Ok();
+        }
     }
-
 }

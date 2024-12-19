@@ -7,15 +7,15 @@ public class UniversityPostDto
     /// <summary>
     /// Регистрационный номер
     /// </summary>
-    public string Number { get; set; }
+    public required string Number { get; set; }
     /// <summary>
     /// Название университета
     /// </summary>
-    public string Name { get; set; }
+    public required string Name { get; set; }
     /// <summary>
     /// Адрес университета
     /// </summary>
-    public string Address { get; set; }
+    public required string Address { get; set; }
     /// <summary>
     /// ID ректора
     /// </summary>

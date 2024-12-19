@@ -16,9 +16,9 @@ public class ConstructionProperty
     /// Название собственности зданий университета
     /// </summary>
     [Column("name_construction_property")]
-    public string NameConstructionProperty { get; set; }
+    public string? NameConstructionProperty { get; set; }
     /// <summary>
     /// Университеты с заданной собственностью зданий
     /// </summary>
-    public List<University> Universities { get; set; }
+    public List<University>? Universities { get; set; }
 }

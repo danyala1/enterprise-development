@@ -15,7 +15,7 @@ public class SpecialtyTableNode
     /// <summary>
     /// Специальность
     /// </summary>
-    public Specialty Specialty { get; set; }
+    public Specialty? Specialty { get; set; }
     /// <summary>
     /// ID специальности
     /// </summary>

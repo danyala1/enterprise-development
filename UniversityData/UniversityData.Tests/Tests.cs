@@ -67,18 +67,21 @@ public class UnitTests(UnitFixture unitFixture) : IClassFixture<UnitFixture>
     [Fact]
     public void UniversityWithProperty()
     {
-        var result = (from university in unitFixture.Universities
-                      where (university.UniversityProperty.NameUniversityProperty == "муниципальная")
-                      select new
-                      {
-                          university.Id,
-                          university.Name,
-                          university.Number,
-                          university.RectorId,
-                          university.ConstructionProperty,
-                          university.UniversityProperty,
-                          count = university.SpecialtyTable.Sum(specialtiyNode => specialtiyNode.CountGroups)
-                      }).ToList();
+        var result = unitFixture.Universities
+            .Where(university => university.UniversityProperty != null &&
+                                 university.UniversityProperty.NameUniversityProperty == "муниципальная")
+            .Select(university => new
+            {
+                university.Id,
+                university.Name,
+                university.Number,
+                university.RectorId,
+                university.ConstructionProperty,
+                university.UniversityProperty,
+                count = university.SpecialtyTable.Sum(specialtyNode => specialtyNode.CountGroups)
+            })
+            .ToList();
+
         Assert.Equal(3, result.Count);
     }
     /// <summary>
