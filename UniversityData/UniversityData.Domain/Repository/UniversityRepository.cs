@@ -95,7 +95,6 @@ public class UniversityRepository : IUniversityRepository
             .ToListAsync();
     }
 
-    // Реализация новых методов
 
     /// <summary>
     /// Получить максимальное количество кафедр среди университетов.
@@ -104,7 +103,6 @@ public class UniversityRepository : IUniversityRepository
     {
         return await _universities.MaxAsync(u => u.DepartmentsData.Count);
     }
-
 
     /// <summary>
     /// Получить университеты по идентификатору собственности.

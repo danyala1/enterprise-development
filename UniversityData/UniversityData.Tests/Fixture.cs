@@ -34,7 +34,6 @@ public class UnitFixture
         new() { Name = "Кафедра информационных технологий", SupervisorNumber = "890918737" }
     ];
 
-
     public List<Rector> Rectors => 
     [
         new()
@@ -65,7 +64,6 @@ public class UnitFixture
             Position = "Ректор"
         }
     ];
-
 
     public List<Faculty> Faculties => 
     [
@@ -107,7 +105,6 @@ public class UnitFixture
         }
     ];
 
-
     public List<SpecialtyTableNode> SpecialtyTableNodes =>
     [
         new() { Specialty = Specialties[0], CountGroups = 8 },
@@ -122,7 +119,6 @@ public class UnitFixture
         new() { Specialty = Specialties[4], CountGroups = 8 },
         new() { Specialty = Specialties[4], CountGroups = 8 }
     ];
-
 
     public List<University> Universities =>
     [
@@ -180,5 +176,4 @@ public class UnitFixture
             }
         }
     ];
-
 }

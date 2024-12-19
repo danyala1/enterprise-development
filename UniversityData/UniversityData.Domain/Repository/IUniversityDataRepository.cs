@@ -51,9 +51,7 @@ public interface IUniversityRepository
 {
     Task<int> GetMaxDepartmentCountAsync();
     Task<List<University>> GetUniversitiesByPropertyIdAsync(int universityPropertyId);
-    Task<IEnumerable<University>> GetUniversitiesByDepartmentCountAsync(); //добавить параметры
-
-
+    Task<IEnumerable<University>> GetUniversitiesByDepartmentCountAsync();
     Task<University?> GetByNumberAsync(string number);
     Task<IEnumerable<University>> GetUniversitiesWithMaxDepartmentsAsync();
     Task<IEnumerable<University>> GetUniversitiesWithPropertyAsync(int universityPropertyId);
@@ -62,5 +60,4 @@ public interface IUniversityRepository
     Task DeleteAsync(int id);
     Task<University?> GetByIdAsync(int id);
     Task<IEnumerable<University?>> GetAllAsync();
-
 }

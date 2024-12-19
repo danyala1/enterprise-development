@@ -1,8 +1,6 @@
 ﻿using UniversityData.Domain.Repository;
 using UniversityData.Domain;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 public class FacultyRepository : IFacultyRepository
 {
