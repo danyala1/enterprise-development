@@ -1,34 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace UniversityData.Domain;
-/// <summary>
-/// Информация о кафедре
-/// </summary>
-[Table("department")]
-public class Department
+﻿namespace UniversityData.Domain
 {
-    /// <summary>
-    /// ID
-    /// </summary>
-    [Column("id")]
-    public int Id { get; set; }
-    /// <summary>
-    /// Название кафедры
-    /// </summary>
-    [Column("name")]
-    public required string Name { get; set; }
-    /// <summary>
-    /// Контактный телефон заведущего кафедрой
-    /// </summary>
-    [Column("supervisor_number")]
-    public required string SupervisorNumber { get; set; }
-    /// <summary>
-    /// ID университета
-    /// </summary>
-    [Column("university_id")]
-    public int UniversityId { get; set; }
-    /// <summary>
-    /// Университет
-    /// </summary>
-    public University? University { get; set; }
+    public class Department
+    {
+        public required string Name { get; set; }
+        public List<Specialty> Specialties { get; set; } = new List<Specialty>();
+    }
 }

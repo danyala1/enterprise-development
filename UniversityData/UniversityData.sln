@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniversityData.Domain", "Un
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniversityData.Tests", "UniversityData.Tests\UniversityData.Tests.csproj", "{88EBC499-F916-4995-8066-25082EBDF4CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversityData.Api", "UniversityData.Api\UniversityData.Api.csproj", "{D88FCB72-2489-48D5-9F34-7BC14D3E91E2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{88EBC499-F916-4995-8066-25082EBDF4CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88EBC499-F916-4995-8066-25082EBDF4CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88EBC499-F916-4995-8066-25082EBDF4CC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D88FCB72-2489-48D5-9F34-7BC14D3E91E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D88FCB72-2489-48D5-9F34-7BC14D3E91E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D88FCB72-2489-48D5-9F34-7BC14D3E91E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D88FCB72-2489-48D5-9F34-7BC14D3E91E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
