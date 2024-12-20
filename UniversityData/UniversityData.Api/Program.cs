@@ -1,15 +1,32 @@
+using Microsoft.EntityFrameworkCore;
+using UniversityData.Api.Services;
+using UniversityData.Api;
+using UniversityData.Api.Services.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddDbContext<UniversityDbContext>(options =>
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("Postgre"),
+        b => b.MigrationsAssembly("UniversityData.Domain")));
+
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IFacultyService, FacultyService>();
+builder.Services.AddScoped<IRectorService, RectorService>();
+builder.Services.AddScoped<IUniversityService, UniversityService>();
+builder.Services.AddScoped<ISpecialtyService, SpecialtyService>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+builder.Services.AddSwaggerGen(c =>
+{
+    c.IncludeXmlComments(xmlPath);
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -1,8 +1,18 @@
-﻿namespace Api.Dto
+﻿namespace UniversityData.Api.Dto;
+
+/// <summary>
+/// Представляет данные департамента.
+/// </summary>
+public class DepartmentDto
 {
-    public class DepartmentDto
-    {
-        public string Name { get; set; }
-        public int FacultyId { get; set; }
-    }
+    /// <summary>
+    /// Получает или задает название департамента.
+    /// </summary>
+    public required string Name { get; set; }
+
+    /// <summary>
+    /// Получает или задает идентификатор факультета, к которому принадлежит департамент.
+    /// </summary>
+    public int FacultyId { get; set; }
 }
+

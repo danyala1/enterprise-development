@@ -1,11 +1,33 @@
-﻿namespace Api.Dto
+﻿namespace UniversityData.Api.Dto;
+
+/// <summary>
+/// Представляет данные ректора.
+/// </summary>
+public class RectorDto
 {
-    public class RectorDto
-    {
-        public string FullName { get; set; }
-        public string Degree { get; set; }
-        public string Title { get; set; }
-        public string Position { get; set; }
-        public int UniversityId { get; set; } // ВУЗ, к которому относится ректор
-    }
+    /// <summary>
+    /// Получает или задает полное имя ректора.
+    /// </summary>
+    public required string FullName { get; set; }
+
+    /// <summary>
+    /// Получает или задает степень ректора.
+    /// </summary>
+    public required string Degree { get; set; }
+
+    /// <summary>
+    /// Получает или задает титул ректора.
+    /// </summary>
+    public required string Title { get; set; }
+
+    /// <summary>
+    /// Получает или задает должность ректора.
+    /// </summary>
+    public required string Position { get; set; }
+
+    /// <summary>
+    /// Получает или задает идентификатор университета, к которому принадлежит ректор.
+    /// </summary>
+    public int UniversityId { get; set; }
 }
+

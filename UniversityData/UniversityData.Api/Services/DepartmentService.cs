@@ -1,43 +1,84 @@
-﻿using UniversityData.Domain;
-using System.Xml.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using UniversityData.Domain;
+using UniversityData.Api.Services.Interfaces;
 
-namespace Api
+namespace UniversityData.Api.Services;
+
+/// <summary>
+/// Сервис для управления департаментами.
+/// </summary>
+public class DepartmentService : IDepartmentService
 {
-    public class DepartmentService : IDepartmentService
+    private readonly UniversityDbContext _context;
+
+    /// <summary>
+    /// Инициализирует новый экземпляр класса <see cref="DepartmentService"/>.
+    /// </summary>
+    /// <param name="context">Контекст базы данных.</param>
+    public DepartmentService(UniversityDbContext context)
     {
-        private readonly List<Department> _departments = new();
+        _context = context;
+    }
 
-        public List<Department> GetAll()
+    /// <summary>
+    /// Получает все департаменты.
+    /// </summary>
+    /// <returns>Список всех департаментов.</returns>
+    public List<Department> GetAll()
+    {
+        return _context.Departments
+            .Include(d => d.Specialties)
+            .ToList();
+    }
+
+    /// <summary>
+    /// Получает департамент по идентификатору.
+    /// </summary>
+    /// <param name="id">Идентификатор департамента.</param>
+    /// <returns>Департамент с указанным идентификатором или <c>null</c>, если не найден.</returns>
+    public Department? GetById(int id)
+    {
+        return _context.Departments
+            .Include(d => d.Specialties)
+            .FirstOrDefault(d => d.Id == id);
+    }
+
+    /// <summary>
+    /// Создает новый департамент.
+    /// </summary>
+    /// <param name="department">Данные нового департамента.</param>
+    public void Create(Department department)
+    {
+        _context.Departments.Add(department);
+        _context.SaveChanges(); 
+    }
+
+    /// <summary>
+    /// Обновляет существующий департамент.
+    /// </summary>
+    /// <param name="id">Идентификатор департамента для обновления.</param>
+    /// <param name="department">Обновленные данные департамента.</param>
+    public void Update(int id, Department department)
+    {
+        var existingDepartment = GetById(id);
+        if (existingDepartment != null)
         {
-            return _departments;
+            existingDepartment.Name = department.Name;
+            _context.SaveChanges(); 
         }
+    }
 
-        public Department? GetById(int id)
+    /// <summary>
+    /// Удаляет департамент по идентификатору.
+    /// </summary>
+    /// <param name="id">Идентификатор департамента для удаления.</param>
+    public void Delete(int id)
+    {
+        var department = GetById(id);
+        if (department != null)
         {
-            return _departments.FirstOrDefault(d => d.Id == id);
-        }
-
-        public void Create(Department department)
-        {
-            _departments.Add(department);
-        }
-
-        public void Update(int id, Department department)
-        {
-            var existingDepartment = GetById(id);
-            if (existingDepartment != null)
-            {
-                existingDepartment.Name = department.Name;
-            }
-        }
-
-        public void Delete(int id)
-        {
-            var department = GetById(id);
-            if (department != null)
-            {
-                _departments.Remove(department);
-            }
+            _context.Departments.Remove(department);
+            _context.SaveChanges();
         }
     }
 }

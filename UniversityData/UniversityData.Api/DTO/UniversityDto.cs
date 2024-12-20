@@ -1,13 +1,43 @@
-﻿namespace Api.Dto
+﻿namespace UniversityData.Api.Dto;
+
+/// <summary>
+/// Представляет данные университета.
+/// </summary>
+public class UniversityDto
 {
-    public class UniversityDto
-    {
-        public int RegistrationNumber { get; set; }
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public string InstitutionOwnership { get; set; }
-        public string BuildingOwnership { get; set; }
-        public RectorDto Rector { get; set; } // Вложенный объект RectorDto
-        public List<FacultyDto> Faculties { get; set; } = new List<FacultyDto>(); // Вложенные объекты Faculties
-    }
+    /// <summary>
+    /// Получает или задает регистрационный номер университета.
+    /// </summary>
+    public int RegistrationNumber { get; set; }
+
+    /// <summary>
+    /// Получает или задает название университета.
+    /// </summary>
+    public required string Name { get; set; }
+
+    /// <summary>
+    /// Получает или задает адрес университета.
+    /// </summary>
+    public required string Address { get; set; }
+
+    /// <summary>
+    /// Получает или задает тип собственности университета.
+    /// </summary>
+    public required string InstitutionOwnership { get; set; }
+
+    /// <summary>
+    /// Получает или задает тип собственности здания университета.
+    /// </summary>
+    public required string BuildingOwnership { get; set; }
+
+    /// <summary>
+    /// Получает или задает ректора университета.
+    /// </summary>
+    public RectorDto? Rector { get; set; }
+
+    /// <summary>
+    /// Получает или задает список факультетов, принадлежащих университету.
+    /// </summary>
+    public List<FacultyDto> Faculties { get; set; } = new List<FacultyDto>();
 }
+
