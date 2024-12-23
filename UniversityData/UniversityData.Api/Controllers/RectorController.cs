@@ -110,7 +110,6 @@ public class RectorController : ControllerBase
             return NotFound();
         }
 
-        // Обновляем свойства ректора
         rector.FullName = rectorDto.FullName;
         rector.Degree = rectorDto.Degree;
         rector.Title = rectorDto.Title;

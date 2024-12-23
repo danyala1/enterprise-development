@@ -5,6 +5,22 @@ using UniversityData.Api.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowClient", policy =>
+    {
+        var clientAddr = builder.Configuration.GetSection("Client").Get<Dictionary<string, string>>();
+        if (clientAddr == null || !clientAddr.Any())
+        {
+            throw new Exception("Error!");
+        }
+        policy.WithOrigins(clientAddr.Values.ToArray())
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 builder.Services.AddDbContext<UniversityDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("Postgre"),
@@ -33,6 +49,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowClient");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

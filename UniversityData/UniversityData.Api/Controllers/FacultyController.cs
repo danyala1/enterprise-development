@@ -3,7 +3,7 @@ using UniversityData.Api.Dto;
 using UniversityData.Domain;
 using UniversityData.Api.Services.Interfaces;
 
-namespace Api.Controllers;
+namespace UniversityData.Api.Controllers;
 
 /// <summary>
 /// Контроллер для управления факультетами.

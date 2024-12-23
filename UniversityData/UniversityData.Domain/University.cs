@@ -11,5 +11,5 @@ public class University
     public required Rector Rector { get; set; }
     public required string InstitutionOwnership { get; set; } 
     public required string BuildingOwnership { get; set; }
-    public List<Faculty> Faculties { get; set; } = new List<Faculty>();
+    public List<Faculty> Faculties { get; set; } = [];
 }

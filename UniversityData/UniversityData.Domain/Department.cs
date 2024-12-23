@@ -7,5 +7,5 @@ public class Department
     [Key]
     public int Id { get; set; }
     public required string Name { get; set; }
-    public List<Specialty> Specialties { get; set; } = new List<Specialty>();
+    public List<Specialty> Specialties { get; set; } = [];
 }
