@@ -18,10 +18,7 @@ public class UniversityController : ControllerBase
     /// Инициализирует новый экземпляр класса <see cref="UniversityController"/>.
     /// </summary>
     /// <param name="service">Сервис для управления университетами.</param>
-    public UniversityController(IUniversityService service)
-    {
-        _service = service;
-    }
+    public UniversityController(IUniversityService service) => _service = service;
 
     /// <summary>
     /// Получает все университеты.

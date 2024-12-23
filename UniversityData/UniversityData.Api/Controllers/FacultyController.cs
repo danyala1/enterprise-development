@@ -18,10 +18,7 @@ public class FacultyController : ControllerBase
     /// Инициализирует новый экземпляр класса <see cref="FacultyController"/>.
     /// </summary>
     /// <param name="service">Сервис для управления факультетами.</param>
-    public FacultyController(IFacultyService service)
-    {
-        _service = service;
-    }
+    public FacultyController(IFacultyService service) => _service = service;
 
     /// <summary>
     /// Получает все факультеты.

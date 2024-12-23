@@ -6,27 +6,27 @@
 public class RectorDto
 {
     /// <summary>
-    /// Получает или задает полное имя ректора.
+    /// Полное имя ректора.
     /// </summary>
     public required string FullName { get; set; }
 
     /// <summary>
-    /// Получает или задает степень ректора.
+    /// Степень ректора.
     /// </summary>
     public required string Degree { get; set; }
 
     /// <summary>
-    /// Получает или задает титул ректора.
+    /// Титул ректора.
     /// </summary>
     public required string Title { get; set; }
 
     /// <summary>
-    /// Получает или задает должность ректора.
+    /// Должность ректора.
     /// </summary>
     public required string Position { get; set; }
 
     /// <summary>
-    /// Получает или задает идентификатор университета, к которому принадлежит ректор.
+    /// Идентификатор университета, к которому принадлежит ректор.
     /// </summary>
     public int UniversityId { get; set; }
 }

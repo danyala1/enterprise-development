@@ -18,10 +18,7 @@ public class SpecialtyController : ControllerBase
     /// Инициализирует новый экземпляр класса <see cref="SpecialtyController"/>.
     /// </summary>
     /// <param name="service">Сервис для управления специальностями.</param>
-    public SpecialtyController(ISpecialtyService service)
-    {
-        _service = service;
-    }
+    public SpecialtyController(ISpecialtyService service) => _service = service;
 
     /// <summary>
     /// Получает все специальности.

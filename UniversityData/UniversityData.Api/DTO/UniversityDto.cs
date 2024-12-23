@@ -6,37 +6,37 @@
 public class UniversityDto
 {
     /// <summary>
-    /// Получает или задает регистрационный номер университета.
+    /// Регистрационный номер университета.
     /// </summary>
     public int RegistrationNumber { get; set; }
 
     /// <summary>
-    /// Получает или задает название университета.
+    /// Название университета.
     /// </summary>
     public required string Name { get; set; }
 
     /// <summary>
-    /// Получает или задает адрес университета.
+    /// Адрес университета.
     /// </summary>
     public required string Address { get; set; }
 
     /// <summary>
-    /// Получает или задает тип собственности университета.
+    /// Тип собственности университета.
     /// </summary>
     public required string InstitutionOwnership { get; set; }
 
     /// <summary>
-    /// Получает или задает тип собственности здания университета.
+    /// Тип собственности здания университета.
     /// </summary>
     public required string BuildingOwnership { get; set; }
 
     /// <summary>
-    /// Получает или задает ректора университета.
+    /// Ректора университета.
     /// </summary>
     public RectorDto? Rector { get; set; }
 
     /// <summary>
-    /// Получает или задает список факультетов, принадлежащих университету.
+    /// Список факультетов, принадлежащих университету.
     /// </summary>
     public List<FacultyDto> Faculties { get; set; } = new List<FacultyDto>();
 }

@@ -13,74 +13,72 @@ namespace UniversityData.Api.Controllers;
     {
         private readonly IDepartmentService _service;
 
-        /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="DepartmentController"/>.
-        /// </summary>
-        /// <param name="service">Сервис для управления департаментами.</param>
-        public DepartmentController(IDepartmentService service)
+    /// <summary>
+    /// Инициализирует новый экземпляр класса <see cref="DepartmentController"/>.
+    /// </summary>
+    /// <param name="service">Сервис для управления департаментами.</param>
+    public DepartmentController(IDepartmentService service) => _service = service;
+
+    /// <summary>
+    /// Получает все департаменты.
+    /// </summary>
+    /// <returns>Список всех департаментов.</returns>
+    [HttpGet]
+    public IActionResult GetAll()
+    {
+        var departments = _service.GetAll();
+        return Ok(departments);
+    }
+
+
+    /// <summary>
+    /// Получает департамент по идентификатору.
+    /// </summary>
+    /// <param name="id">Идентификатор департамента.</param>
+    /// <returns>Департамент с указанным идентификатором или 404, если не найден.</returns>
+    [HttpGet("{id}")]
+    public IActionResult GetById(int id)
+    {
+        var department = _service.GetById(id);
+        if (department == null)
+            return NotFound();
+        return Ok(department);
+    }
+
+    /// <summary>
+    /// Создает новый департамент.
+    /// </summary>
+    /// <param name="dto">Данные нового департамента.</param>
+    /// <returns>Созданный департамент с кодом состояния 201.</returns>
+    [HttpPost]
+    public IActionResult Create(DepartmentDto dto)
+    {
+        var department = new Department
         {
-            _service = service;
-        }
+            Name = dto.Name
+        };
 
-        /// <summary>
-        /// Получает все департаменты.
-        /// </summary>
-        /// <returns>Список всех департаментов.</returns>
-        [HttpGet]
-        public IActionResult GetAll()
+        _service.Create(department);
+        return CreatedAtAction(nameof(GetById), new { id = department.Id }, department);
+    }
+
+    /// <summary>
+    /// Обновляет существующий департамент.
+    /// </summary>
+    /// <param name="id">Идентификатор департамента для обновления.</param>
+    /// <param name="dto">Обновленные данные департамента.</param>
+    /// <returns>Код состояния 204, если обновление прошло успешно.</returns>
+    [HttpPut("{id}")]
+    public IActionResult Update(int id, DepartmentDto dto)
+    {
+        var department = new Department
         {
-            var departments = _service.GetAll();
-            return Ok(departments);
-        }
+            Name = dto.Name
+        };
 
-        /// <summary>
-        /// Получает департамент по идентификатору.
-        /// </summary>
-        /// <param name="id">Идентификатор департамента.</param>
-        /// <returns>Департамент с указанным идентификатором или 404, если не найден.</returns>
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
-        {
-            var department = _service.GetById(id);
-            if (department == null)
-                return NotFound();
-            return Ok(department);
-        }
-
-        /// <summary>
-        /// Создает новый департамент.
-        /// </summary>
-        /// <param name="dto">Данные нового департамента.</param>
-        /// <returns>Созданный департамент с кодом состояния 201.</returns>
-        [HttpPost]
-        public IActionResult Create(DepartmentDto dto)
-        {
-            var department = new Department
-            {
-                Name = dto.Name
-            };
-
-            _service.Create(department);
-            return CreatedAtAction(nameof(GetById), new { id = department.Id }, department);
-        }
-
-        /// <summary>
-        /// Обновляет существующий департамент.
-        /// </summary>
-        /// <param name="id">Идентификатор департамента для обновления.</param>
-        /// <param name="dto">Обновленные данные департамента.</param>
-        /// <returns>Код состояния 204, если обновление прошло успешно.</returns>
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, DepartmentDto dto)
-        {
-            var department = new Department
-            {
-                Name = dto.Name
-            };
-
-            _service.Update(id, department);
-            return NoContent();
-        }
+        _service.Update(id, department);
+        return NoContent();
+    }
 
         /// <summary>
         /// Удаляет департамент по идентификатору.

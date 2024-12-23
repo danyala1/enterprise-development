@@ -6,12 +6,12 @@
 public class FacultyDto
 {
     /// <summary>
-    /// Получает или задает название факультета.
+    /// Название факультета.
     /// </summary>
     public required string Name { get; set; }
 
     /// <summary>
-    /// Получает или задает идентификатор университета, к которому принадлежит факультет.
+    /// Идентификатор университета, к которому принадлежит факультет.
     /// </summary>
     public int UniversityId { get; set; }
 }

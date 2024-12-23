@@ -18,10 +18,7 @@ public class RectorController : ControllerBase
     /// Инициализирует новый экземпляр класса <see cref="RectorController"/>.
     /// </summary>
     /// <param name="rectorService">Сервис для управления ректорами.</param>
-    public RectorController(IRectorService rectorService)
-    {
-        _rectorService = rectorService;
-    }
+    public RectorController(IRectorService rectorService) => _rectorService = rectorService;
 
     /// <summary>
     /// Получает всех ректоров.
