@@ -1,0 +1,25 @@
+.view-rector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  .rector-card {
+    padding: 20px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+    h5 {
+      margin-bottom: 10px;
+    }
+
+    strong {
+      color: #555;
+    }
+
+    p {
+      margin: 5px 0;
+    }
+  }
+}
