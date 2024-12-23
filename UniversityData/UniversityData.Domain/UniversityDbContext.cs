@@ -48,20 +48,20 @@ public class UniversityDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<University>()
-            .HasOne<Rector>()
-            .WithMany(r => r.Universities)
-            .HasForeignKey(u => u.RectorId)
-            .OnDelete(DeleteBehavior.SetNull);
+        .HasOne<Rector>() // Указываем связь с ректором
+        .WithMany(r => r.Universities) // Связь с коллекцией университетов
+        .HasForeignKey(u => u.RectorId) // Указываем внешний ключ
+        .OnDelete(DeleteBehavior.SetNull); // Поведение при удалении
 
         modelBuilder.Entity<University>()
             .HasMany(u => u.Faculties)
             .WithOne()
-            .HasForeignKey(f => f.Id);
+            .HasForeignKey(f => f.UniversityId);
 
         modelBuilder.Entity<Faculty>()
             .HasMany(f => f.Departments)
             .WithOne()
-            .HasForeignKey(d => d.Id);
+            .HasForeignKey(d => d.FacultyId);
 
         modelBuilder.Entity<Department>()
             .HasMany(d => d.DepartmentSpecialties)
@@ -73,12 +73,10 @@ public class UniversityDbContext : DbContext
             .WithOne(ds => ds.Specialty)
             .HasForeignKey(ds => ds.SpecialtyId);
 
+        // Устанавливаем связь между специальностью и университетом
         modelBuilder.Entity<Specialty>()
-            .Property(s => s.Code)
-            .IsRequired();
-
-        modelBuilder.Entity<Specialty>()
-            .Property(s => s.Name)
-            .IsRequired();
+            .HasOne<University>()
+            .WithMany()
+            .HasForeignKey(s => s.UniversityId);
     }
 }

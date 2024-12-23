@@ -30,4 +30,3 @@ public class RectorDto
     /// </summary>
     public int UniversityId { get; set; }
 }
-

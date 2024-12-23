@@ -25,4 +25,3 @@ public class SpecialtyDto
     /// </summary>
     public int DepartmentId { get; set; }
 }
-

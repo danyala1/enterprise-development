@@ -45,8 +45,8 @@ namespace UniversityData.Api.Services
         /// <param name="faculty">Данные нового факультета.</param>
         public void Create(Faculty faculty)
         {
-            _context.Faculties.Add(faculty); 
-            _context.SaveChanges(); 
+                _context.Faculties.Add(faculty);
+                _context.SaveChanges();
         }
 
         /// <summary>

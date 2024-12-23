@@ -1,5 +1,4 @@
 ﻿using UniversityData.Domain;
-using Xunit;
 
 namespace UnitTests;
 

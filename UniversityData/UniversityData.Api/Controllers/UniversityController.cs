@@ -125,7 +125,6 @@ public class UniversityController : ControllerBase
         {
             return NotFound();
         }
-
         _service.Delete(id);
         return NoContent();
     }

@@ -56,11 +56,12 @@ public class FacultyController : ControllerBase
         var faculty = new Faculty
         {
             Name = dto.Name,
-            Departments = []
+            UniversityId = dto.UniversityId, // Устанавливаем идентификатор университета
+            Departments = new List<Department>()
         };
 
         _service.Create(faculty);
-        return CreatedAtAction(nameof(GetById), new { id = faculty.Id }, faculty);
+        return CreatedAtAction(nameof(GetById), new { id = faculty.Id }, dto);
     }
 
     /// <summary>

@@ -15,4 +15,3 @@ public class FacultyDto
     /// </summary>
     public int UniversityId { get; set; }
 }
-

@@ -1,6 +1,5 @@
 ﻿using UniversityData.Api.Dto;
 using UniversityData.Api.Services.Interfaces;
-using UniversityData.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace UniversityData.Api.Services;

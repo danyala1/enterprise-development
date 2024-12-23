@@ -15,4 +15,3 @@ public class DepartmentDto
     /// </summary>
     public int FacultyId { get; set; }
 }
-

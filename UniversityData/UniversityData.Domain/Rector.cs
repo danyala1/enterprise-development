@@ -38,11 +38,6 @@ public class Rector
     public required string Position { get; set; }
 
     /// <summary>
-    /// Список университетов, которыми управляет ректор.
-    /// </summary>
-    public List<University> University { get; set; } = new();
-
-    /// <summary>
     /// Список университетов, связанных с ректором.
     /// </summary>
     public List<University> Universities { get; set; } = new();

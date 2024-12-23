@@ -30,7 +30,6 @@ namespace UniversityData.Api.Controllers;
         return Ok(departments);
     }
 
-
     /// <summary>
     /// Получает департамент по идентификатору.
     /// </summary>
@@ -53,9 +52,11 @@ namespace UniversityData.Api.Controllers;
     [HttpPost]
     public ActionResult<DepartmentDto> Create(DepartmentDto dto)
     {
+
         var department = new Department
         {
-            Name = dto.Name
+            Name = dto.Name,
+            Id = dto.FacultyId
         };
 
         _service.Create(department);

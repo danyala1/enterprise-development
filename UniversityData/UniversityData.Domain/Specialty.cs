@@ -8,31 +8,37 @@ namespace UniversityData.Domain;
 public class Specialty
 {
     /// <summary>
-    /// Уникальный идентификатор специальности.
+    /// Получает или задает уникальный идентификатор специальности.
     /// </summary>
     [Key]
     public int Id { get; set; }
 
     /// <summary>
-    /// Шифр специальности.
+    /// Получает или задает код специальности.
     /// Это обязательное поле.
     /// </summary>
     public required string Code { get; set; }
 
     /// <summary>
-    /// Название специальности.
+    /// Получает или задает название специальности.
     /// Это обязательное поле.
     /// </summary>
     public required string Name { get; set; }
 
     /// <summary>
-    /// Количество групп, связанных с данной специальностью.
+    /// Получает или задает количество групп, связанных с данной специальностью.
     /// </summary>
     public int GroupCount { get; set; }
 
     /// <summary>
-    /// Список связей между специальностью и департаментами.
-    /// Используется для реализации связи многие-ко-многим.
+    /// Получает или задает идентификатор университета, к которому принадлежит специальность.
+    /// Может быть <c>null</c>, если специальность не привязана к университету.
     /// </summary>
-    public List<DepartmentSpecialty> DepartmentSpecialties { get; set; } = new();
+    public int? UniversityId { get; set; }
+
+    /// <summary>
+    /// Получает или задает список связей между специальностью и департаментами.
+    /// Используется для реализации отношения многие-ко-многим.
+    /// </summary>
+    public List<DepartmentSpecialty> DepartmentSpecialties { get; set; } = [];
 }

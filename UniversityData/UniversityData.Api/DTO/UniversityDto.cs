@@ -34,6 +34,4 @@ public class UniversityDto
     /// Id Ректора университета.
     /// </summary>
     public int? RectorId { get; set; }
-   
 }
-
