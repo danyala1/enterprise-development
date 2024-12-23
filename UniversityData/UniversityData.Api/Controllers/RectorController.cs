@@ -12,20 +12,20 @@ namespace UniversityData.Api.Controllers;
 [ApiController]
 public class RectorController : ControllerBase
 {
-    private readonly IRectorService _rectorService;
+    private readonly IEntityService<Rector> _rectorService;
 
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="RectorController"/>.
     /// </summary>
     /// <param name="rectorService">Сервис для управления ректорами.</param>
-    public RectorController(IRectorService rectorService) => _rectorService = rectorService;
+    public RectorController(IEntityService<Rector> rectorService) => _rectorService = rectorService;
 
     /// <summary>
     /// Получает всех ректоров.
     /// </summary>
     /// <returns>Список всех ректоров.</returns>
     [HttpGet]
-    public ActionResult<List<RectorDto>> GetAll()
+    public ActionResult<RectorDto> GetAll()
     {
         var rectors = _rectorService.GetAll();
         var rectorDtos = rectors.Select(r => new RectorDto
@@ -72,9 +72,9 @@ public class RectorController : ControllerBase
     /// <param name="rectorDto">Данные нового ректора.</param>
     /// <returns>Созданный ректор с кодом состояния 201.</returns>
     [HttpPost]
-    public ActionResult Create(RectorDto rectorDto)
+    public ActionResult<RectorDto> Create(RectorDto rectorDto)
     {
-        if (rectorDto == null)
+        if (rectorDto == null )
         {
             return BadRequest();
         }

@@ -12,20 +12,20 @@ namespace UniversityData.Api.Controllers;
 [Route("api/[controller]")]
 public class FacultyController : ControllerBase
 {
-    private readonly IFacultyService _service;
+    private readonly IEntityService<Faculty> _service;
 
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="FacultyController"/>.
     /// </summary>
     /// <param name="service">Сервис для управления факультетами.</param>
-    public FacultyController(IFacultyService service) => _service = service;
+    public FacultyController(IEntityService<Faculty> service) => _service = service;
 
     /// <summary>
     /// Получает все факультеты.
     /// </summary>
     /// <returns>Список всех факультетов.</returns>
     [HttpGet]
-    public IActionResult GetAll()
+    public ActionResult<FacultyDto> GetAll()
     {
         var faculties = _service.GetAll();
         return Ok(faculties);
@@ -37,7 +37,7 @@ public class FacultyController : ControllerBase
     /// <param name="id">Идентификатор факультета.</param>
     /// <returns>Факультет с указанным идентификатором или 404, если не найден.</returns>
     [HttpGet("{id}")]
-    public IActionResult GetById(int id)
+    public ActionResult<FacultyDto> GetById(int id)
     {
         var faculty = _service.GetById(id);
         if (faculty == null)
@@ -51,12 +51,12 @@ public class FacultyController : ControllerBase
     /// <param name="dto">Данные нового факультета.</param>
     /// <returns>Созданный факультет с кодом состояния 201.</returns>
     [HttpPost]
-    public IActionResult Create(FacultyDto dto)
+    public ActionResult<FacultyDto> Create(FacultyDto dto)
     {
         var faculty = new Faculty
         {
             Name = dto.Name,
-            Departments = new List<Department>()
+            Departments = []
         };
 
         _service.Create(faculty);
@@ -70,12 +70,12 @@ public class FacultyController : ControllerBase
     /// <param name="dto">Обновленные данные факультета.</param>
     /// <returns>Код состояния 204, если обновление прошло успешно.</returns>
     [HttpPut("{id}")]
-    public IActionResult Updatec(int id, FacultyDto dto)
+    public ActionResult<FacultyDto> Update(int id, FacultyDto dto)
     {
         var faculty = new Faculty
         {
             Name = dto.Name,
-            Departments = new List<Department>()
+            Departments = []
         };
 
         _service.Update(id, faculty);
@@ -88,7 +88,7 @@ public class FacultyController : ControllerBase
     /// <param name="id">Идентификатор факультета для удаления.</param>
     /// <returns>Код состояния 204, если удаление прошло успешно.</returns>
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public ActionResult<FacultyDto> Delete(int id)
     {
         _service.Delete(id);
         return NoContent();

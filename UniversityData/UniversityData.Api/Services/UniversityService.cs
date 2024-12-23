@@ -8,8 +8,13 @@ namespace UniversityData.Api.Services;
 /// Сервис для управления университетами.
 /// </summary>
 public class UniversityService : IUniversityService
-{
-    private readonly List<University> _universities = new();
+{   
+    private readonly UniversityDbContext _context;
+    /// <summary>
+    /// Инициализирует новый экземпляр класса <see cref="UniversityService"/>.
+    /// </summary>
+    /// <param name="context">Контекст базы данных.</param>
+    public UniversityService(UniversityDbContext context) => _context = context;
 
     /// <summary>
     /// Получает все университеты.
@@ -17,7 +22,7 @@ public class UniversityService : IUniversityService
     /// <returns>Список всех университетов в виде <see cref="UniversityDto"/>.</returns>
     public List<UniversityDto> GetAll()
     {
-        return _universities
+        return _context.Universities
             .Select(u => new UniversityDto
             {
                 RegistrationNumber = u.RegistrationNumber,
@@ -36,7 +41,7 @@ public class UniversityService : IUniversityService
     /// <returns>Университет с указанным идентификатором или <c>null</c>, если не найден.</returns>
     public UniversityDto? GetById(int id)
     {
-        var university = _universities.FirstOrDefault(u => u.RegistrationNumber == id);
+        var university = _context.Universities.FirstOrDefault(u => u.RegistrationNumber == id);
         if (university == null)
             return null;
 
@@ -46,7 +51,8 @@ public class UniversityService : IUniversityService
             Name = university.Name,
             Address = university.Address,
             InstitutionOwnership = university.InstitutionOwnership,
-            BuildingOwnership = university.BuildingOwnership
+            BuildingOwnership = university.BuildingOwnership,
+            RectorId = university.RectorId
         };
     }
 
@@ -56,7 +62,8 @@ public class UniversityService : IUniversityService
     /// <param name="university">Данные нового университета.</param>
     public void Create(University university)
     {
-        _universities.Add(university);
+        _context.Universities.Add(university);
+        _context.SaveChanges();
     }
 
     /// <summary>
@@ -66,7 +73,7 @@ public class UniversityService : IUniversityService
     /// <param name="university">Обновленные данные университета.</param>
     public void Update(int id, University university)
     {
-        var existingUniversity = _universities.FirstOrDefault(u => u.RegistrationNumber == id);
+        var existingUniversity = _context.Universities.FirstOrDefault(u => u.RegistrationNumber == id);
         if (existingUniversity != null)
         {
             existingUniversity.Name = university.Name;
@@ -74,6 +81,7 @@ public class UniversityService : IUniversityService
             existingUniversity.InstitutionOwnership = university.InstitutionOwnership;
             existingUniversity.BuildingOwnership = university.BuildingOwnership;
         }
+        _context.SaveChanges();
     }
 
     /// <summary>
@@ -82,31 +90,12 @@ public class UniversityService : IUniversityService
     /// <param name="id">Идентификатор университета для удаления.</param>
     public void Delete(int id)
     {
-        var university = _universities.FirstOrDefault(u => u.RegistrationNumber == id);
+        var university = _context.Universities.Find(id);
         if (university != null)
         {
-            _universities.Remove(university);
+            _context.Universities.Remove(university);
+            _context.SaveChanges();
         }
-    }
-
-    /// <summary>
-    /// Получает топ университетов по количеству департаментов.
-    /// </summary>
-    /// <returns>Список топ университетов с наибольшим количеством департаментов в виде <see cref="UniversityDto"/>.</returns>
-    public List<UniversityDto> GetTopUniversitiesByDepartments()
-    {
-        return _universities
-            .OrderByDescending(u => u.Faculties.SelectMany(f => f.Departments).Count()) // Считаем кафедры по всем факультетам
-            .Take(5)
-            .Select(u => new UniversityDto
-            {
-                RegistrationNumber = u.RegistrationNumber,
-                Name = u.Name,
-                Address = u.Address,
-                InstitutionOwnership = u.InstitutionOwnership,
-                BuildingOwnership = u.BuildingOwnership
-            })
-            .ToList();
     }
 
     /// <summary>
@@ -115,7 +104,7 @@ public class UniversityService : IUniversityService
     /// <returns>Список топ 5 специальностей в виде <see cref="SpecialtyDto"/>.</returns>
     public List<SpecialtyDto> GetTop5SpecialtiesByGroups()
     {
-        return _universities
+        return _context.Universities
             .SelectMany(u => u.Faculties.SelectMany(f => f.Departments.SelectMany(d => d.Specialties)))
             .OrderByDescending(s => s.GroupCount)
             .Take(5)
@@ -126,44 +115,6 @@ public class UniversityService : IUniversityService
                 GroupCount = s.GroupCount
             })
             .ToList();
-    }
-
-    /// <summary>
-    /// Получает университеты по типу собственности.
-    /// </summary>
-    /// <param name="ownership">Тип собственности университета.</param>
-    /// <returns>Список университетов с указанным типом собственности в виде <see cref="UniversityDto"/>.</returns>
-    public List<UniversityDto> GetUniversitiesByOwnership(string ownership)
-    {
-        return _universities
-            .Where(u => u.InstitutionOwnership.Equals(ownership, StringComparison.OrdinalIgnoreCase))
-            .Select(u => new UniversityDto
-            {
-                RegistrationNumber = u.RegistrationNumber,
-                Name = u.Name,
-                Address = u.Address,
-                InstitutionOwnership = u.InstitutionOwnership,
-                BuildingOwnership = u.BuildingOwnership
-            })
-            .ToList();
-    }
-
-    /// <summary>
-    /// Получает сводку по университетам по типу собственности.
-    /// </summary>
-    /// <returns>Словарь с типами собственности и количеством факультетов, департаментов и специальностей.</returns>
-    public Dictionary<string, (int faculties, int departments, int specialties)> GetSummaryByOwnership()
-    {
-        return _universities
-            .GroupBy(u => new { u.InstitutionOwnership, u.BuildingOwnership })
-            .ToDictionary(
-                g => $"{g.Key.InstitutionOwnership} - {g.Key.BuildingOwnership}",
-                g => (
-                    faculties: g.SelectMany(u => u.Faculties).Count(),
-                    departments: g.SelectMany(u => u.Faculties.SelectMany(f => f.Departments)).Count(),
-                    specialties: g.SelectMany(u => u.Faculties.SelectMany(f => f.Departments.SelectMany(d => d.Specialties))).Count()
-                )
-            );
     }
 
     /// <summary>

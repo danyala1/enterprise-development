@@ -13,19 +13,25 @@ namespace UniversityData.Api.Controllers;
 public class SpecialtyController : ControllerBase
 {
     private readonly ISpecialtyService _service;
+    private readonly IAnalyticsService _analyticsService;
 
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="SpecialtyController"/>.
     /// </summary>
     /// <param name="service">Сервис для управления специальностями.</param>
-    public SpecialtyController(ISpecialtyService service) => _service = service;
+    /// <param name="analyticsService">Сервис для аналитических запросов.</param>
+    public SpecialtyController(ISpecialtyService service, IAnalyticsService analyticsService)
+    {
+        _service = service;
+        _analyticsService = analyticsService; 
+    }
 
     /// <summary>
     /// Получает все специальности.
     /// </summary>
     /// <returns>Список всех специальностей.</returns>
     [HttpGet]
-    public IActionResult GetAll()
+    public ActionResult<SpecialtyDto> GetAll()
     {
         var specialties = _service.GetAll();
         return Ok(specialties);
@@ -37,7 +43,7 @@ public class SpecialtyController : ControllerBase
     /// <param name="id">Идентификатор специальности.</param>
     /// <returns>Специальность с указанным идентификатором или 404, если не найдена.</returns>
     [HttpGet("{id}")]
-    public IActionResult GetById(int id)
+    public ActionResult<SpecialtyDto> GetById(int id)
     {
         var specialty = _service.GetById(id);
         if (specialty == null)
@@ -51,7 +57,7 @@ public class SpecialtyController : ControllerBase
     /// <param name="dto">Данные новой специальности.</param>
     /// <returns>Созданная специальность с кодом состояния 201.</returns>
     [HttpPost]
-    public IActionResult Create(SpecialtyDto dto)
+    public ActionResult<SpecialtyDto> Create(SpecialtyDto dto)
     {
         var specialty = new Specialty
         {
@@ -71,7 +77,7 @@ public class SpecialtyController : ControllerBase
     /// <param name="dto">Обновленные данные специальности.</param>
     /// <returns>Код состояния 204, если обновление прошло успешно.</returns>
     [HttpPut("{id}")]
-    public IActionResult Update(int id, SpecialtyDto dto)
+    public ActionResult<SpecialtyDto> Update(int id, SpecialtyDto dto)
     {
         var specialty = new Specialty
         {
@@ -90,7 +96,7 @@ public class SpecialtyController : ControllerBase
     /// <param name="id">Идентификатор специальности для удаления.</param>
     /// <returns>Код состояния 204, если удаление прошло успешно.</returns>
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public ActionResult<SpecialtyDto> Delete(int id)
     {
         var specialty = _service.GetById(id);
         if (specialty == null)
@@ -101,13 +107,16 @@ public class SpecialtyController : ControllerBase
     }
 
     /// <summary>
-    /// Получает топ специальностей по количеству групп.
+    /// Получает топ 5 специальностей по количеству групп.
     /// </summary>
-    /// <returns>Список топ специальных с наибольшим количеством групп.</returns>
+    /// <returns>Список топ 5 специальных с наибольшим количеством групп.</returns>
     [HttpGet("top")]
-    public IActionResult GetTopSpecialties()
+    public ActionResult<SpecialtyDto> GetTopSpecialties()
     {
-        var result = _service.GetTopSpecialtiesByGroups();
-        return Ok(result);
+        var result = _analyticsService.GetTop5SpecialtiesByGroups(); 
+        if (result == null || !result.Any())
+            return NotFound();
+
+        return Ok(result); 
     }
 }

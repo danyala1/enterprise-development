@@ -2,10 +2,25 @@
 
 namespace UniversityData.Domain;
 
+/// <summary>
+/// Представляет факультет университета.
+/// </summary>
 public class Faculty
 {
+    /// <summary>
+    /// Уникальный идентификатор факультета.
+    /// </summary>
     [Key]
     public int Id { get; set; }
+
+    /// <summary>
+    /// Название факультета.
+    /// Это обязательное поле.
+    /// </summary>
     public required string Name { get; set; }
-    public List<Department> Departments { get; set; } = [];
+
+    /// <summary>
+    /// Список департаментов, связанных с факультетом.
+    /// </summary>
+    public List<Department> Departments { get; set; } = new();
 }

@@ -11,20 +11,20 @@ namespace UniversityData.Api.Controllers;
     [Route("api/[controller]")]
     public class DepartmentController : ControllerBase
     {
-        private readonly IDepartmentService _service;
+        private readonly IEntityService<Department> _service;
 
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="DepartmentController"/>.
     /// </summary>
     /// <param name="service">Сервис для управления департаментами.</param>
-    public DepartmentController(IDepartmentService service) => _service = service;
+    public DepartmentController(IEntityService<Department> service) => _service = service;
 
     /// <summary>
     /// Получает все департаменты.
     /// </summary>
     /// <returns>Список всех департаментов.</returns>
     [HttpGet]
-    public IActionResult GetAll()
+    public ActionResult<List<DepartmentDto>> GetAll()
     {
         var departments = _service.GetAll();
         return Ok(departments);
@@ -37,7 +37,7 @@ namespace UniversityData.Api.Controllers;
     /// <param name="id">Идентификатор департамента.</param>
     /// <returns>Департамент с указанным идентификатором или 404, если не найден.</returns>
     [HttpGet("{id}")]
-    public IActionResult GetById(int id)
+    public ActionResult<DepartmentDto> GetById(int id)
     {
         var department = _service.GetById(id);
         if (department == null)
@@ -51,7 +51,7 @@ namespace UniversityData.Api.Controllers;
     /// <param name="dto">Данные нового департамента.</param>
     /// <returns>Созданный департамент с кодом состояния 201.</returns>
     [HttpPost]
-    public IActionResult Create(DepartmentDto dto)
+    public ActionResult<DepartmentDto> Create(DepartmentDto dto)
     {
         var department = new Department
         {
@@ -69,7 +69,7 @@ namespace UniversityData.Api.Controllers;
     /// <param name="dto">Обновленные данные департамента.</param>
     /// <returns>Код состояния 204, если обновление прошло успешно.</returns>
     [HttpPut("{id}")]
-    public IActionResult Update(int id, DepartmentDto dto)
+    public ActionResult<DepartmentDto> Update(int id, DepartmentDto dto)
     {
         var department = new Department
         {
@@ -86,7 +86,7 @@ namespace UniversityData.Api.Controllers;
         /// <param name="id">Идентификатор департамента для удаления.</param>
         /// <returns>Код состояния 204, если удаление прошло успешно.</returns>
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public ActionResult<DepartmentDto> Delete(int id)
         {
             _service.Delete(id);
             return NoContent();

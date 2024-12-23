@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using UniversityData.Api.Services;
 using UniversityData.Api;
 using UniversityData.Api.Services.Interfaces;
+using UniversityData.Domain;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,11 +27,12 @@ builder.Services.AddDbContext<UniversityDbContext>(options =>
         builder.Configuration.GetConnectionString("Postgre"),
         b => b.MigrationsAssembly("UniversityData.Domain")));
 
-builder.Services.AddScoped<IDepartmentService, DepartmentService>();
-builder.Services.AddScoped<IFacultyService, FacultyService>();
-builder.Services.AddScoped<IRectorService, RectorService>();
+builder.Services.AddScoped<IEntityService<Department>, DepartmentService>();
+builder.Services.AddScoped<IEntityService<Faculty>, FacultyService>();
+builder.Services.AddScoped<IEntityService<Rector>, RectorService>();
 builder.Services.AddScoped<IUniversityService, UniversityService>();
 builder.Services.AddScoped<ISpecialtyService, SpecialtyService>();
+builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

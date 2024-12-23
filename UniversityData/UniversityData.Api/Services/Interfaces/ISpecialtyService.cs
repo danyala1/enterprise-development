@@ -38,10 +38,4 @@ public interface ISpecialtyService
     /// </summary>
     /// <param name="id">Идентификатор специальности для удаления.</param>
     void Delete(int id);
-
-    /// <summary>
-    /// Получает топ специальностей по количеству групп.
-    /// </summary>
-    /// <returns>Список топ 5 специальностей с наибольшим количеством групп.</returns>
-    List<Specialty> GetTopSpecialtiesByGroups();
 }

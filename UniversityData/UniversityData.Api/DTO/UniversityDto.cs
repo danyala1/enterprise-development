@@ -31,13 +31,9 @@ public class UniversityDto
     public required string BuildingOwnership { get; set; }
 
     /// <summary>
-    /// Ректора университета.
+    /// Id Ректора университета.
     /// </summary>
-    public RectorDto? Rector { get; set; }
-
-    /// <summary>
-    /// Список факультетов, принадлежащих университету.
-    /// </summary>
-    public List<FacultyDto> Faculties { get; set; } = new List<FacultyDto>();
+    public int? RectorId { get; set; }
+   
 }
 
