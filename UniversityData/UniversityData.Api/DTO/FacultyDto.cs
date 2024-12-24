@@ -14,4 +14,9 @@ public class FacultyDto
     /// Идентификатор университета, к которому принадлежит факультет.
     /// </summary>
     public int UniversityId { get; set; }
+
+    /// <summary>
+    /// Получает или задает уникальный идентификатор факультета.
+    /// </summary>
+    public int Id { get; set; }
 }

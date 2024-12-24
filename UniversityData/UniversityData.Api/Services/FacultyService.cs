@@ -26,7 +26,11 @@ namespace UniversityData.Api.Services
         /// <returns>Список всех факультетов.</returns>
         public List<Faculty> GetAll()
         {
-            return _context.Faculties.Include(f => f.Departments).ToList(); 
+            // Если департаменты не обязательны, можно удалить Include:
+            // return _context.Faculties.ToList();
+
+            // Если департаменты необходимы
+            return _context.Faculties.Include(f => f.Departments).ToList();
         }
 
         /// <summary>
@@ -36,7 +40,7 @@ namespace UniversityData.Api.Services
         /// <returns>Факультет с указанным идентификатором или <c>null</c>, если не найден.</returns>
         public Faculty? GetById(int id)
         {
-            return _context.Faculties.Include(f => f.Departments).FirstOrDefault(f => f.Id == id); 
+            return _context.Faculties.Include(f => f.Departments).FirstOrDefault(f => f.Id == id);
         }
 
         /// <summary>
@@ -45,8 +49,8 @@ namespace UniversityData.Api.Services
         /// <param name="faculty">Данные нового факультета.</param>
         public void Create(Faculty faculty)
         {
-                _context.Faculties.Add(faculty);
-                _context.SaveChanges();
+            _context.Faculties.Add(faculty);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -59,13 +63,16 @@ namespace UniversityData.Api.Services
             var existingFaculty = GetById(id);
             if (existingFaculty != null)
             {
+                // Обновляем данные факультета
                 existingFaculty.Name = faculty.Name;
-                
-                _context.SaveChanges(); 
+                existingFaculty.UniversityId = faculty.UniversityId;  // Обновляем университет, если требуется
+
+                // Сохраняем изменения в базе данных
+                _context.SaveChanges();
             }
             else
             {
-                throw new KeyNotFoundException($"Faculty with ID {id} not found."); 
+                throw new KeyNotFoundException($"Faculty with ID {id} not found.");
             }
         }
 
@@ -79,11 +86,11 @@ namespace UniversityData.Api.Services
             if (faculty != null)
             {
                 _context.Faculties.Remove(faculty);
-                _context.SaveChanges(); 
+                _context.SaveChanges();
             }
             else
             {
-                throw new KeyNotFoundException($"Faculty with ID {id} not found."); 
+                throw new KeyNotFoundException($"Faculty with ID {id} not found.");
             }
         }
     }

@@ -11,7 +11,7 @@ using UniversityData.Api;
 namespace UniversityData.Domain.Migrations
 {
     [DbContext(typeof(UniversityDbContext))]
-    [Migration("20241224145807_UniversityMigration")]
+    [Migration("20241224165754_UniversityMigration")]
     partial class UniversityMigration
     {
         /// <inheritdoc />

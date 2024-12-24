@@ -8,8 +8,8 @@ namespace UniversityData.Api.Controllers;
 /// <summary>
 /// Контроллер для управления факультетами.
 /// </summary>
-[ApiController]
 [Route("api/[controller]")]
+[ApiController]
 public class FacultyController : ControllerBase
 {
     private readonly IEntityService<Faculty> _service;
@@ -23,12 +23,27 @@ public class FacultyController : ControllerBase
     /// <summary>
     /// Получает все факультеты.
     /// </summary>
-    /// <returns>Список всех факультетов.</returns>
+    /// <returns>Список всех факультетов в виде <see cref="List{FacultyDto}"/>.</returns>
     [HttpGet]
-    public ActionResult<FacultyDto> GetAll()
+    public ActionResult<List<FacultyDto>> GetAll()
     {
-        var faculties = _service.GetAll();
-        return Ok(faculties);
+        try
+        {
+            var faculties = _service.GetAll();
+            var facultyDtos = faculties.Select(f => new FacultyDto
+            {
+                Id = f.Id,
+                Name = f.Name,
+                UniversityId = f.UniversityId
+            }).ToList();
+
+            return Ok(facultyDtos);
+        }
+        catch (Exception ex)
+        {
+            // Логируем ошибку
+            return StatusCode(500, ex.Message);
+        }
     }
 
     /// <summary>
@@ -39,10 +54,24 @@ public class FacultyController : ControllerBase
     [HttpGet("{id}")]
     public ActionResult<FacultyDto> GetById(int id)
     {
-        var faculty = _service.GetById(id);
-        if (faculty == null)
-            return NotFound();
-        return Ok(faculty);
+        try
+        {
+            var faculty = _service.GetById(id);
+            if (faculty == null)
+                return NotFound($"Faculty with ID {id} not found.");
+
+            return Ok(new FacultyDto
+            {
+                Id = faculty.Id,
+                Name = faculty.Name,
+                UniversityId = faculty.UniversityId
+            });
+        }
+        catch (Exception ex)
+        {
+
+            return StatusCode(500, ex.Message);
+        }
     }
 
     /// <summary>
@@ -53,15 +82,26 @@ public class FacultyController : ControllerBase
     [HttpPost]
     public ActionResult<FacultyDto> Create(FacultyDto dto)
     {
-        var faculty = new Faculty
+        try
         {
-            Name = dto.Name,
-            UniversityId = dto.UniversityId,
-            Departments = new List<Department>()
-        };
+            var faculty = new Faculty
+            {
+                Name = dto.Name,
+                UniversityId = dto.UniversityId
+            };
 
-        _service.Create(faculty);
-        return CreatedAtAction(nameof(GetById), new { id = faculty.Id }, dto);
+            _service.Create(faculty);
+            return CreatedAtAction(nameof(GetById), new { id = faculty.Id }, new FacultyDto
+            {
+                Id = faculty.Id,
+                Name = faculty.Name,
+                UniversityId = faculty.UniversityId
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     /// <summary>
@@ -71,16 +111,27 @@ public class FacultyController : ControllerBase
     /// <param name="dto">Обновленные данные факультета.</param>
     /// <returns>Код состояния 204, если обновление прошло успешно.</returns>
     [HttpPut("{id}")]
-    public ActionResult<FacultyDto> Update(int id, FacultyDto dto)
+    public ActionResult Update(int id, FacultyDto dto)
     {
-        var faculty = new Faculty
+        try
         {
-            Name = dto.Name,
-            Departments = []
-        };
+            var faculty = new Faculty
+            {
+                Name = dto.Name,
+                UniversityId = dto.UniversityId
+            };
 
-        _service.Update(id, faculty);
-        return NoContent();
+            _service.Update(id, faculty);
+            return NoContent();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     /// <summary>
@@ -89,9 +140,21 @@ public class FacultyController : ControllerBase
     /// <param name="id">Идентификатор факультета для удаления.</param>
     /// <returns>Код состояния 204, если удаление прошло успешно.</returns>
     [HttpDelete("{id}")]
-    public ActionResult<FacultyDto> Delete(int id)
+    public ActionResult Delete(int id)
     {
-        _service.Delete(id);
-        return NoContent();
+        try
+        {
+            _service.Delete(id);
+            return NoContent();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+
+            return StatusCode(500, ex.Message);
+        }
     }
 }

@@ -33,6 +33,7 @@ public class UniversityController : ControllerBase
     [HttpGet]
     public ActionResult<UniversityDto> GetAll()
     {
+
         var universities = _service.GetAll();
         return Ok(universities);
     }
@@ -110,7 +111,6 @@ public class UniversityController : ControllerBase
 
         return NoContent();
     }
-
 
     /// <summary>
     /// Удаляет университет по идентификатору.

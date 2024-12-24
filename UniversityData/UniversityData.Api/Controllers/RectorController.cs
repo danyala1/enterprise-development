@@ -28,6 +28,7 @@ public class RectorController : ControllerBase
     public ActionResult<List<RectorDto>> GetAll()
     {
         var rectors = _rectorService.GetAll();
+
         var rectorDtos = rectors.Select(r => new RectorDto
         {
             FullName = r.FullName,
@@ -37,8 +38,24 @@ public class RectorController : ControllerBase
             UniversityId = r.UniversityId
         }).ToList();
 
-        return Ok(rectorDtos);
+        var rectorIdDtos = rectors.Select(r => new RectorIdDto
+        {
+            Id = r.Id 
+        }).ToList();
+
+        var result = rectorDtos.Zip(rectorIdDtos, (dto, idDto) => new
+        {
+            dto.FullName,
+            dto.Degree,
+            dto.Title,
+            dto.Position,
+            dto.UniversityId,
+            Id = idDto.Id
+        }).ToList();
+
+        return Ok(result);
     }
+
 
     /// <summary>
     /// Получает ректора по идентификатору.
@@ -60,7 +77,7 @@ public class RectorController : ControllerBase
             Degree = rector.Degree,
             Title = rector.Title,
             Position = rector.Position,
-            UniversityId = rector.UniversityId // Используйте правильное поле
+            UniversityId = rector.UniversityId
         };
 
         return Ok(rectorDto);
@@ -113,7 +130,7 @@ public class RectorController : ControllerBase
         existingRector.Title = rectorDto.Title;
         existingRector.Position = rectorDto.Position;
 
-        _rectorService.Update(id, existingRector); // Передаем существующего ректора для обновления
+        _rectorService.Update(id, existingRector);
         return NoContent();
     }
 
