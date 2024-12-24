@@ -48,10 +48,10 @@ public class UniversityDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<University>()
-        .HasOne<Rector>() // Указываем связь с ректором
-        .WithMany(r => r.Universities) // Связь с коллекцией университетов
-        .HasForeignKey(u => u.RectorId) // Указываем внешний ключ
-        .OnDelete(DeleteBehavior.SetNull); // Поведение при удалении
+        .HasOne<Rector>()
+        .WithMany(r => r.Universities)
+        .HasForeignKey(u => u.RectorId)
+        .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<University>()
             .HasMany(u => u.Faculties)
@@ -73,7 +73,6 @@ public class UniversityDbContext : DbContext
             .WithOne(ds => ds.Specialty)
             .HasForeignKey(ds => ds.SpecialtyId);
 
-        // Устанавливаем связь между специальностью и университетом
         modelBuilder.Entity<Specialty>()
             .HasOne<University>()
             .WithMany()

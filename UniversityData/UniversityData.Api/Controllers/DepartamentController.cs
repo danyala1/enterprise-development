@@ -4,14 +4,14 @@ using UniversityData.Domain;
 using UniversityData.Api.Services.Interfaces;
 
 namespace UniversityData.Api.Controllers;
-    /// <summary>
-    /// Контроллер для управления департаментами.
-    /// </summary>
-    [ApiController]
-    [Route("api/[controller]")]
-    public class DepartmentController : ControllerBase
-    {
-        private readonly IEntityService<Department> _service;
+/// <summary>
+/// Контроллер для управления департаментами.
+/// </summary>
+[ApiController]
+[Route("api/[controller]")]
+public class DepartmentController : ControllerBase
+{
+    private readonly IEntityService<Department> _service;
 
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="DepartmentController"/>.
@@ -81,15 +81,15 @@ namespace UniversityData.Api.Controllers;
         return NoContent();
     }
 
-        /// <summary>
-        /// Удаляет департамент по идентификатору.
-        /// </summary>
-        /// <param name="id">Идентификатор департамента для удаления.</param>
-        /// <returns>Код состояния 204, если удаление прошло успешно.</returns>
-        [HttpDelete("{id}")]
-        public ActionResult<DepartmentDto> Delete(int id)
-        {
-            _service.Delete(id);
-            return NoContent();
-        }
+    /// <summary>
+    /// Удаляет департамент по идентификатору.
+    /// </summary>
+    /// <param name="id">Идентификатор департамента для удаления.</param>
+    /// <returns>Код состояния 204, если удаление прошло успешно.</returns>
+    [HttpDelete("{id}")]
+    public ActionResult<DepartmentDto> Delete(int id)
+    {
+        _service.Delete(id);
+        return NoContent();
     }
+}
