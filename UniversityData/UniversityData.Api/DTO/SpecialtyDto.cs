@@ -1,4 +1,6 @@
-﻿namespace UniversityData.Api.Dto;
+﻿using UniversityData.Domain;
+
+namespace UniversityData.Api.Dto;
 
 /// <summary>
 /// Представляет данные специальности.
@@ -19,6 +21,11 @@ public class SpecialtyDto
     /// Количество групп, связанных с данной специальностью.
     /// </summary>
     public int GroupCount { get; set; }
+
+    /// <summary>
+    /// Идентификатор университета, к которому принадлежит специальность.
+    /// </summary>
+    public int UniversityId { get; set; }
 
     /// <summary>
     /// Идентификатор департамента, к которому принадлежит специальность.

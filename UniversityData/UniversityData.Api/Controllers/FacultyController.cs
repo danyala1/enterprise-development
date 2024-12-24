@@ -56,7 +56,7 @@ public class FacultyController : ControllerBase
         var faculty = new Faculty
         {
             Name = dto.Name,
-            UniversityId = dto.UniversityId, // Устанавливаем идентификатор университета
+            UniversityId = dto.UniversityId,
             Departments = new List<Department>()
         };
 

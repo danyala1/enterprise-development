@@ -20,7 +20,8 @@ namespace UniversityData.Domain.Migrations
                     FullName = table.Column<string>(type: "text", nullable: false),
                     Degree = table.Column<string>(type: "text", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
-                    Position = table.Column<string>(type: "text", nullable: false)
+                    Position = table.Column<string>(type: "text", nullable: false),
+                    UniversityId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -71,6 +72,28 @@ namespace UniversityData.Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Specialties",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Code = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    GroupCount = table.Column<int>(type: "integer", nullable: false),
+                    UniversityId = table.Column<int>(type: "integer", nullable: true),
+                    DepartmentId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Specialties", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Specialties_Universities_UniversityId",
+                        column: x => x.UniversityId,
+                        principalTable: "Universities",
+                        principalColumn: "RegistrationNumber");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Departments",
                 columns: table => new
                 {
@@ -91,53 +114,24 @@ namespace UniversityData.Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Specialties",
+                name: "DepartmentSpecialties",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Code = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    GroupCount = table.Column<int>(type: "integer", nullable: false),
-                    UniversityId = table.Column<int>(type: "integer", nullable: true),
-                    DepartmentId = table.Column<int>(type: "integer", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Specialties", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Specialties_Departments_DepartmentId",
-                        column: x => x.DepartmentId,
-                        principalTable: "Departments",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Specialties_Universities_UniversityId",
-                        column: x => x.UniversityId,
-                        principalTable: "Universities",
-                        principalColumn: "RegistrationNumber");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DepartmentSpecialty",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     DepartmentId = table.Column<int>(type: "integer", nullable: false),
-                    SpecialtyId = table.Column<int>(type: "integer", nullable: false)
+                    SpecialtiesId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DepartmentSpecialty", x => x.Id);
+                    table.PrimaryKey("PK_DepartmentSpecialties", x => new { x.DepartmentId, x.SpecialtiesId });
                     table.ForeignKey(
-                        name: "FK_DepartmentSpecialty_Departments_DepartmentId",
+                        name: "FK_DepartmentSpecialties_Departments_DepartmentId",
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DepartmentSpecialty_Specialties_SpecialtyId",
-                        column: x => x.SpecialtyId,
+                        name: "FK_DepartmentSpecialties_Specialties_SpecialtiesId",
+                        column: x => x.SpecialtiesId,
                         principalTable: "Specialties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -149,24 +143,14 @@ namespace UniversityData.Domain.Migrations
                 column: "FacultyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DepartmentSpecialty_DepartmentId",
-                table: "DepartmentSpecialty",
-                column: "DepartmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DepartmentSpecialty_SpecialtyId",
-                table: "DepartmentSpecialty",
-                column: "SpecialtyId");
+                name: "IX_DepartmentSpecialties_SpecialtiesId",
+                table: "DepartmentSpecialties",
+                column: "SpecialtiesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Faculties_UniversityId",
                 table: "Faculties",
                 column: "UniversityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Specialties_DepartmentId",
-                table: "Specialties",
-                column: "DepartmentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Specialties_UniversityId",
@@ -183,13 +167,13 @@ namespace UniversityData.Domain.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DepartmentSpecialty");
-
-            migrationBuilder.DropTable(
-                name: "Specialties");
+                name: "DepartmentSpecialties");
 
             migrationBuilder.DropTable(
                 name: "Departments");
+
+            migrationBuilder.DropTable(
+                name: "Specialties");
 
             migrationBuilder.DropTable(
                 name: "Faculties");

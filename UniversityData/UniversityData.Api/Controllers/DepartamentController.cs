@@ -56,7 +56,7 @@ public class DepartmentController : ControllerBase
         var department = new Department
         {
             Name = dto.Name,
-            Id = dto.FacultyId
+            FacultyId = dto.FacultyId
         };
 
         _service.Create(department);

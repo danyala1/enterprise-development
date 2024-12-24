@@ -30,8 +30,8 @@ builder.Services.AddDbContext<UniversityDbContext>(options =>
 builder.Services.AddScoped<IEntityService<Department>, DepartmentService>();
 builder.Services.AddScoped<IEntityService<Faculty>, FacultyService>();
 builder.Services.AddScoped<IEntityService<Rector>, RectorService>();
-builder.Services.AddScoped<IUniversityService, UniversityService>();
-builder.Services.AddScoped<ISpecialtyService, SpecialtyService>();
+builder.Services.AddScoped<IEntityService<University>, UniversityService>();
+builder.Services.AddScoped<IEntityService<Specialty>, SpecialtyService>();
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
 builder.Services.AddControllers();

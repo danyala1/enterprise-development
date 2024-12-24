@@ -63,19 +63,14 @@ public class UniversityDbContext : DbContext
             .WithOne()
             .HasForeignKey(d => d.FacultyId);
 
-        modelBuilder.Entity<Department>()
-            .HasMany(d => d.DepartmentSpecialties)
-            .WithOne(ds => ds.Department)
-            .HasForeignKey(ds => ds.DepartmentId);
-
-        modelBuilder.Entity<Specialty>()
-            .HasMany(s => s.DepartmentSpecialties)
-            .WithOne(ds => ds.Specialty)
-            .HasForeignKey(ds => ds.SpecialtyId);
-
         modelBuilder.Entity<Specialty>()
             .HasOne<University>()
             .WithMany()
             .HasForeignKey(s => s.UniversityId);
-    }
+
+        modelBuilder.Entity<Department>()
+            .HasMany(s => s.Specialties)
+            .WithMany(d => d.Department)
+            .UsingEntity(j => j.ToTable("DepartmentSpecialties"));
+    }   
 }

@@ -41,4 +41,9 @@ public class Rector
     /// Список университетов, связанных с ректором.
     /// </summary>
     public List<University> Universities { get; set; } = new();
+
+    /// <summary>
+    /// Идентификатор университета, к которому принадлежит ректор.
+    /// </summary>
+    public int UniversityId { get; set; }
 }

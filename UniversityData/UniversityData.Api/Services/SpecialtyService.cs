@@ -7,7 +7,7 @@ namespace UniversityData.Api.Services
     /// <summary>
     /// Сервис для управления специальностями.
     /// </summary>
-    public class SpecialtyService : ISpecialtyService
+    public class SpecialtyService : IEntityService<Specialty>
     {
         private readonly UniversityDbContext _context;
 
@@ -48,7 +48,7 @@ namespace UniversityData.Api.Services
         public void Create(Specialty specialty)
         {
             _context.Specialties.Add(specialty);
-            _context.SaveChanges(); 
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace UniversityData.Api.Services
                 existingSpecialty.Name = specialty.Name;
                 existingSpecialty.Code = specialty.Code;
                 existingSpecialty.GroupCount = specialty.GroupCount;
-                _context.SaveChanges(); 
+                _context.SaveChanges();
             }
             else
             {
@@ -88,18 +88,6 @@ namespace UniversityData.Api.Services
             {
                 throw new KeyNotFoundException($"Специальность с ID {id} не найдена.");
             }
-        }
-
-        /// <summary>
-        /// Получает топ специальностей по количеству групп.
-        /// </summary>
-        /// <returns>Список топ 5 специальностей с наибольшим количеством групп.</returns>
-        public List<Specialty> GetTopSpecialtiesByGroups()
-        {
-            return _context.Specialties
-                .OrderByDescending(s => s.GroupCount) 
-                .Take(5)
-                .ToList();
         }
     }
 }

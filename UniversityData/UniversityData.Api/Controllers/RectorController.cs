@@ -25,7 +25,7 @@ public class RectorController : ControllerBase
     /// </summary>
     /// <returns>Список всех ректоров.</returns>
     [HttpGet]
-    public ActionResult<RectorDto> GetAll()
+    public ActionResult<List<RectorDto>> GetAll()
     {
         var rectors = _rectorService.GetAll();
         var rectorDtos = rectors.Select(r => new RectorDto
@@ -34,7 +34,7 @@ public class RectorController : ControllerBase
             Degree = r.Degree,
             Title = r.Title,
             Position = r.Position,
-            UniversityId = r.Id
+            UniversityId = r.UniversityId
         }).ToList();
 
         return Ok(rectorDtos);
@@ -60,7 +60,7 @@ public class RectorController : ControllerBase
             Degree = rector.Degree,
             Title = rector.Title,
             Position = rector.Position,
-            UniversityId = rector.Id
+            UniversityId = rector.UniversityId // Используйте правильное поле
         };
 
         return Ok(rectorDto);
@@ -74,7 +74,7 @@ public class RectorController : ControllerBase
     [HttpPost]
     public ActionResult<RectorDto> Create(RectorDto rectorDto)
     {
-        if (rectorDto == null )
+        if (rectorDto == null)
         {
             return BadRequest();
         }
@@ -85,7 +85,8 @@ public class RectorController : ControllerBase
             Degree = rectorDto.Degree,
             Title = rectorDto.Title,
             Position = rectorDto.Position,
-            Id = rectorDto.UniversityId
+            UniversityId = rectorDto.UniversityId
+            
         };
 
         _rectorService.Create(rector);
@@ -101,37 +102,36 @@ public class RectorController : ControllerBase
     [HttpPut("{id}")]
     public ActionResult Update(int id, RectorDto rectorDto)
     {
-        var rector = _rectorService.GetById(id);
-        if (rector == null)
+        var existingRector = _rectorService.GetById(id);
+        if (existingRector == null)
         {
             return NotFound();
         }
 
-        rector.FullName = rectorDto.FullName;
-        rector.Degree = rectorDto.Degree;
-        rector.Title = rectorDto.Title;
-        rector.Position = rectorDto.Position;
-        rector.Id = rectorDto.UniversityId;
+        existingRector.FullName = rectorDto.FullName;
+        existingRector.Degree = rectorDto.Degree;
+        existingRector.Title = rectorDto.Title;
+        existingRector.Position = rectorDto.Position;
 
-        _rectorService.Update(id, rector);
+        _rectorService.Update(id, existingRector); // Передаем существующего ректора для обновления
         return NoContent();
     }
 
     /// <summary>
     /// Удаляет ректора по идентификатору.
     /// </summary>
-    /// <param name="id">Идентификатор ректора для удаления.</param>
+    /// <param name="rectorIdDto">DTO с идентификатором ректора для удаления.</param>
     /// <returns>Код состояния 204, если удаление прошло успешно.</returns>
-    [HttpDelete("{id}")]
-    public ActionResult Delete(int id)
+    [HttpDelete]
+    public ActionResult Delete([FromBody] RectorIdDto rectorIdDto)
     {
-        var rector = _rectorService.GetById(id);
-        if (rector == null)
+        var existingRector = _rectorService.GetById(rectorIdDto.Id);
+        if (existingRector == null)
         {
             return NotFound();
         }
 
-        _rectorService.Delete(id);
+        _rectorService.Delete(rectorIdDto.Id);
         return NoContent();
     }
 }

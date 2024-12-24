@@ -12,7 +12,7 @@ namespace UniversityData.Api.Controllers;
 [ApiController]
 public class SpecialtyController : ControllerBase
 {
-    private readonly ISpecialtyService _service;
+    private readonly IEntityService<Specialty> _service;
     private readonly IAnalyticsService _analyticsService;
 
     /// <summary>
@@ -20,7 +20,7 @@ public class SpecialtyController : ControllerBase
     /// </summary>
     /// <param name="service">Сервис для управления специальностями.</param>
     /// <param name="analyticsService">Сервис для аналитических запросов.</param>
-    public SpecialtyController(ISpecialtyService service, IAnalyticsService analyticsService)
+    public SpecialtyController(IEntityService<Specialty> service, IAnalyticsService analyticsService)
     {
         _service = service;
         _analyticsService = analyticsService; 
@@ -63,7 +63,10 @@ public class SpecialtyController : ControllerBase
         {
             Code = dto.Code,
             Name = dto.Name,
-            GroupCount = dto.GroupCount
+            GroupCount = dto.GroupCount,
+            UniversityId = dto.UniversityId,
+            DepartmentId = dto.DepartmentId,
+           
         };
 
         _service.Create(specialty);

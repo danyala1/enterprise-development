@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using UniversityData.Domain;
+﻿using UniversityData.Domain;
 using UniversityData.Api.Services.Interfaces;
 
 namespace UniversityData.Api.Services
@@ -60,6 +59,9 @@ namespace UniversityData.Api.Services
             if (existingRector != null)
             {
                 existingRector.FullName = rector.FullName;
+                existingRector.Degree = rector.Degree;
+                existingRector.Title = rector.Title;
+                existingRector.Position = rector.Position;
                 _context.SaveChanges(); 
             }
             else

@@ -21,6 +21,21 @@ namespace UniversityData.Domain.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("DepartmentSpecialty", b =>
+                {
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SpecialtiesId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("DepartmentId", "SpecialtiesId");
+
+                    b.HasIndex("SpecialtiesId");
+
+                    b.ToTable("DepartmentSpecialties", (string)null);
+                });
+
             modelBuilder.Entity("UniversityData.Domain.Department", b =>
                 {
                     b.Property<int>("Id")
@@ -41,29 +56,6 @@ namespace UniversityData.Domain.Migrations
                     b.HasIndex("FacultyId");
 
                     b.ToTable("Departments");
-                });
-
-            modelBuilder.Entity("UniversityData.Domain.DepartmentSpecialty", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SpecialtyId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.HasIndex("SpecialtyId");
-
-                    b.ToTable("DepartmentSpecialty");
                 });
 
             modelBuilder.Entity("UniversityData.Domain.Faculty", b =>
@@ -112,6 +104,9 @@ namespace UniversityData.Domain.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("UniversityId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.ToTable("Rectors");
@@ -143,8 +138,6 @@ namespace UniversityData.Domain.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("UniversityId");
 
@@ -185,6 +178,21 @@ namespace UniversityData.Domain.Migrations
                     b.ToTable("Universities");
                 });
 
+            modelBuilder.Entity("DepartmentSpecialty", b =>
+                {
+                    b.HasOne("UniversityData.Domain.Department", null)
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("UniversityData.Domain.Specialty", null)
+                        .WithMany()
+                        .HasForeignKey("SpecialtiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("UniversityData.Domain.Department", b =>
                 {
                     b.HasOne("UniversityData.Domain.Faculty", null)
@@ -192,25 +200,6 @@ namespace UniversityData.Domain.Migrations
                         .HasForeignKey("FacultyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("UniversityData.Domain.DepartmentSpecialty", b =>
-                {
-                    b.HasOne("UniversityData.Domain.Department", "Department")
-                        .WithMany("DepartmentSpecialties")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("UniversityData.Domain.Specialty", "Specialty")
-                        .WithMany("DepartmentSpecialties")
-                        .HasForeignKey("SpecialtyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Department");
-
-                    b.Navigation("Specialty");
                 });
 
             modelBuilder.Entity("UniversityData.Domain.Faculty", b =>
@@ -224,10 +213,6 @@ namespace UniversityData.Domain.Migrations
 
             modelBuilder.Entity("UniversityData.Domain.Specialty", b =>
                 {
-                    b.HasOne("UniversityData.Domain.Department", null)
-                        .WithMany("Specialties")
-                        .HasForeignKey("DepartmentId");
-
                     b.HasOne("UniversityData.Domain.University", null)
                         .WithMany()
                         .HasForeignKey("UniversityId");
@@ -241,13 +226,6 @@ namespace UniversityData.Domain.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
                 });
 
-            modelBuilder.Entity("UniversityData.Domain.Department", b =>
-                {
-                    b.Navigation("DepartmentSpecialties");
-
-                    b.Navigation("Specialties");
-                });
-
             modelBuilder.Entity("UniversityData.Domain.Faculty", b =>
                 {
                     b.Navigation("Departments");
@@ -256,11 +234,6 @@ namespace UniversityData.Domain.Migrations
             modelBuilder.Entity("UniversityData.Domain.Rector", b =>
                 {
                     b.Navigation("Universities");
-                });
-
-            modelBuilder.Entity("UniversityData.Domain.Specialty", b =>
-                {
-                    b.Navigation("DepartmentSpecialties");
                 });
 
             modelBuilder.Entity("UniversityData.Domain.University", b =>

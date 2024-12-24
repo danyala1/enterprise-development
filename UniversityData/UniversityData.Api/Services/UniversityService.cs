@@ -7,8 +7,8 @@ namespace UniversityData.Api.Services;
 /// <summary>
 /// Сервис для управления университетами.
 /// </summary>
-public class UniversityService : IUniversityService
-{   
+public class UniversityService : IEntityService<University>
+{
     private readonly UniversityDbContext _context;
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="UniversityService"/>.
@@ -20,18 +20,10 @@ public class UniversityService : IUniversityService
     /// Получает все университеты.
     /// </summary>
     /// <returns>Список всех университетов в виде <see cref="UniversityDto"/>.</returns>
-    public List<UniversityDto> GetAll()
+    public List<University> GetAll()
     {
-        return _context.Universities
-            .Select(u => new UniversityDto
-            {
-                RegistrationNumber = u.RegistrationNumber,
-                Name = u.Name,
-                Address = u.Address,
-                InstitutionOwnership = u.InstitutionOwnership,
-                BuildingOwnership = u.BuildingOwnership
-            })
-            .ToList();
+        return _context.Universities.ToList();
+            
     }
 
     /// <summary>
@@ -39,21 +31,9 @@ public class UniversityService : IUniversityService
     /// </summary>
     /// <param name="id">Идентификатор университета.</param>
     /// <returns>Университет с указанным идентификатором или <c>null</c>, если не найден.</returns>
-    public UniversityDto? GetById(int id)
+    public University? GetById(int id)
     {
-        var university = _context.Universities.FirstOrDefault(u => u.RegistrationNumber == id);
-        if (university == null)
-            return null;
-
-        return new UniversityDto
-        {
-            RegistrationNumber = university.RegistrationNumber,
-            Name = university.Name,
-            Address = university.Address,
-            InstitutionOwnership = university.InstitutionOwnership,
-            BuildingOwnership = university.BuildingOwnership,
-            RectorId = university.RectorId
-        };
+        return _context.Universities.FirstOrDefault(u => u.RegistrationNumber == id);
     }
 
     /// <summary>
@@ -96,25 +76,6 @@ public class UniversityService : IUniversityService
             _context.Universities.Remove(university);
             _context.SaveChanges();
         }
-    }
-
-    /// <summary>
-    /// Получает топ 5 специальностей по количеству групп.
-    /// </summary>
-    /// <returns>Список топ 5 специальностей в виде <see cref="SpecialtyDto"/>.</returns>
-    public List<SpecialtyDto> GetTop5SpecialtiesByGroups()
-    {
-        return _context.Universities
-            .SelectMany(u => u.Faculties.SelectMany(f => f.Departments.SelectMany(d => d.Specialties)))
-            .OrderByDescending(s => s.GroupCount)
-            .Take(5)
-            .Select(s => new SpecialtyDto
-            {
-                Name = s.Name,
-                Code = s.Code,
-                GroupCount = s.GroupCount
-            })
-            .ToList();
     }
 
     /// <summary>

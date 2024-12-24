@@ -12,7 +12,7 @@ namespace UniversityData.Api.Controllers;
 [Route("api/[controller]")]
 public class UniversityController : ControllerBase
 {
-    private readonly IUniversityService _service;
+    private readonly IEntityService<University> _service;
     private readonly IAnalyticsService _analyticsService;
 
     /// <summary>
@@ -20,7 +20,7 @@ public class UniversityController : ControllerBase
     /// </summary>
     /// <param name="service">Сервис для управления университетами.</param>
     /// <param name="analyticsService">Сервис для аналитических запросов.</param>
-    public UniversityController(IUniversityService service, IAnalyticsService analyticsService)
+    public UniversityController(IEntityService<University> service, IAnalyticsService analyticsService)
     {
         _service = service;
         _analyticsService = analyticsService;

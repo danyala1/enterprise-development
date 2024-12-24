@@ -65,7 +65,7 @@ public class AnalyticsService : IAnalyticsService
     public List<UniversityDto> GetUniversitiesByOwnership(string ownership)
     {
         return _context.Universities
-            .Where(u => u.InstitutionOwnership.Equals(ownership, StringComparison.OrdinalIgnoreCase))
+            .Where(u => u.InstitutionOwnership.ToLower() == ownership.ToLower())
             .Select(u => new UniversityDto
             {
                 RegistrationNumber = u.RegistrationNumber,
