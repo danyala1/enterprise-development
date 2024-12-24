@@ -4,20 +4,15 @@ using UniversityData.Domain;
 using UniversityData.Api.Services.Interfaces;
 
 namespace UniversityData.Api.Controllers;
+
 /// <summary>
 /// Контроллер для управления департаментами.
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class DepartmentController : ControllerBase
+public class DepartmentController(IEntityService<Department> service) : ControllerBase
 {
-    private readonly IEntityService<Department> _service;
-
-    /// <summary>
-    /// Инициализирует новый экземпляр класса <see cref="DepartmentController"/>.
-    /// </summary>
-    /// <param name="service">Сервис для управления департаментами.</param>
-    public DepartmentController(IEntityService<Department> service) => _service = service;
+    private readonly IEntityService<Department> _service = service;
 
     /// <summary>
     /// Получает все департаменты.
@@ -52,7 +47,6 @@ public class DepartmentController : ControllerBase
     [HttpPost]
     public ActionResult<DepartmentDto> Create(DepartmentDto dto)
     {
-
         var department = new Department
         {
             Name = dto.Name,

@@ -10,21 +10,10 @@ namespace UniversityData.Api.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
-public class SpecialtyController : ControllerBase
+public class SpecialtyController(IEntityService<Specialty> service, IAnalyticsService analyticsService) : ControllerBase
 {
-    private readonly IEntityService<Specialty> _service;
-    private readonly IAnalyticsService _analyticsService;
-
-    /// <summary>
-    /// Инициализирует новый экземпляр класса <see cref="SpecialtyController"/>.
-    /// </summary>
-    /// <param name="service">Сервис для управления специальностями.</param>
-    /// <param name="analyticsService">Сервис для аналитических запросов.</param>
-    public SpecialtyController(IEntityService<Specialty> service, IAnalyticsService analyticsService)
-    {
-        _service = service;
-        _analyticsService = analyticsService; 
-    }
+    private readonly IEntityService<Specialty> _service = service;
+    private readonly IAnalyticsService _analyticsService = analyticsService;
 
     /// <summary>
     /// Получает все специальности.

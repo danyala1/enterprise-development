@@ -10,15 +10,9 @@ namespace UniversityData.Api.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
-public class RectorController : ControllerBase
+public class RectorController(IEntityService<Rector> rectorService) : ControllerBase
 {
-    private readonly IEntityService<Rector> _rectorService;
-
-    /// <summary>
-    /// Инициализирует новый экземпляр класса <see cref="RectorController"/>.
-    /// </summary>
-    /// <param name="rectorService">Сервис для управления ректорами.</param>
-    public RectorController(IEntityService<Rector> rectorService) => _rectorService = rectorService;
+    private readonly IEntityService<Rector> _rectorService = rectorService;
 
     /// <summary>
     /// Получает всех ректоров.
